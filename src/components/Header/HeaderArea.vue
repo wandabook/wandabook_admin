@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import { useSidebarStore } from '@/stores/sidebar'
-  import type { OrderDTODish } from '@/types/OrderDTO';
-  import {ref} from 'vue';
+import { useSidebarStore } from '@/stores/sidebar'
+import type { OrderDTODish } from '@/types/OrderDTO';
+import { ref } from 'vue';
 
-  const { toggleSidebar } = useSidebarStore()
-  const sidebarStore = useSidebarStore()
-  const searchQuery = ref('');
+const { toggleSidebar } = useSidebarStore()
+const sidebarStore = useSidebarStore()
+const searchQuery = ref('');
 
 </script>
 
@@ -45,7 +45,7 @@
         </button>
         <!-- Hamburger Toggle BTN -->
         <router-link class="block flex-shrink-0 lg:hidden" to="/">
-          <img src="@/assets/images/logo/restaurant-logo.png" alt="Logo" class="h-15"/>
+          <img src="@/assets/images/logo/Plandetravail23.png" alt="Logo" class="h-15" />
         </router-link>
       </div>
       <!-- Mobile menu end -->
@@ -74,21 +74,22 @@
 </template>
 
 <style scoped>
-  .shadow-top {
-    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
+.shadow-top {
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+}
 
-  .custom-scrollbar {
-    overflow-x: auto;
-  }
+.custom-scrollbar {
+  overflow-x: auto;
+}
 
-  .custom-scrollbar::-webkit-scrollbar {
-    height: 8px;  /* scrollbar height*/
-    background-color: transparent;
-  }
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+  /* scrollbar height*/
+  background-color: transparent;
+}
 
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #4CAF50; 
-    border-radius: 10px;
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #4CAF50;
+  border-radius: 10px;
+}
 </style>
