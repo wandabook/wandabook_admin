@@ -58,69 +58,62 @@ const menuGroups = ref([
         label: 'Patrons',
         route: '/patrons'
       },
-      /* {
-         icon: `
+      /*{
+        icon: `
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
              </svg>
            `,
-         label: '',
-         route: '/plates',
-       },
-       {
-         icon: `
+        label: '',
+        route: '/plates',
+      },*/
+      {
+        icon: `
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
              </svg>
  
            `,
-         label: 'Produits',
-         route: '/products',
-       }*/
+        label: 'Users',
+        route: '/users',
+      }
     ]
   },
-  // {
-  //   name: 'Others',
-  //   menuItems: [
-  //     {
-  //       icon: `<svg
-  //                 class="fill-current"
-  //                 width="18"
-  //                 height="19"
-  //                 viewBox="0 0 18 19"
-  //                 fill="none"
-  //                 xmlns="http://www.w3.org/2000/svg"
-  //               >
-  //                 <g clip-path="url(#clip0_130_9801)">
-  //                   <path
-  //                     d="M10.8563 0.55835C10.5188 0.55835 10.2095 0.8396 10.2095 1.20522V6.83022C10.2095 7.16773 10.4907 7.4771 10.8563 7.4771H16.8751C17.0438 7.4771 17.2126 7.39272 17.3251 7.28022C17.4376 7.1396 17.4938 6.97085 17.4938 6.8021C17.2688 3.28647 14.3438 0.55835 10.8563 0.55835ZM11.4751 6.15522V1.8521C13.8095 2.13335 15.6938 3.8771 16.1438 6.18335H11.4751V6.15522Z"
-  //                     fill=""
-  //                   />
-  //                   <path
-  //                     d="M15.3845 8.7427H9.1126V2.69582C9.1126 2.35832 8.83135 2.07707 8.49385 2.07707C8.40947 2.07707 8.3251 2.07707 8.24072 2.07707C3.96572 2.04895 0.506348 5.53645 0.506348 9.81145C0.506348 14.0864 3.99385 17.5739 8.26885 17.5739C12.5438 17.5739 16.0313 14.0864 16.0313 9.81145C16.0313 9.6427 16.0313 9.47395 16.0032 9.33332C16.0032 8.99582 15.722 8.7427 15.3845 8.7427ZM8.26885 16.3083C4.66885 16.3083 1.77197 13.4114 1.77197 9.81145C1.77197 6.3802 4.47197 3.53957 7.8751 3.3427V9.36145C7.8751 9.69895 8.15635 10.0083 8.52197 10.0083H14.7938C14.6813 13.4958 11.7845 16.3083 8.26885 16.3083Z"
-  //                     fill=""
-  //                   />
-  //                 </g>
-  //                 <defs>
-  //                   <clipPath id="clip0_130_9801">
-  //                     <rect width="18" height="18" fill="white" transform="translate(0 0.052124)" />
-  //                   </clipPath>
-  //                 </defs>
-  //               </svg>`,
-  //       label: 'Settings',
-  //       route: '#',
-  //       children: [
-  //         { label: 'Document Types', route: '/settings/document_types' },
-  //         { label: 'Services', route: '/settings/services' },
-  //         { label: 'Account Types', route: '/settings/account_types' },
-  //         { label: 'User Types', route: '/settings/user_types' },
-  //         { label: 'Operation Types', route: '/settings/operation' }
-  //       ]
-  //     },
-  //   ]
-  // }
+  {
+    name: 'Others',
+    menuItems: [
+      {
+        icon: `<svg
+                   class="fill-current"
+                   width="18"
+                   height="19"
+                   viewBox="0 0 18 19"
+                   fill="none"
+                   xmlns="http://www.w3.org/2000/svg"
+                 >
+                   <g clip-path="url(#clip0_130_9801)">
+                     <path
+                       d="M10.8563 0.55835C10.5188 0.55835 10.2095 0.8396 10.2095 1.20522V6.83022C10.2095 7.16773 10.4907 7.4771 10.8563 7.4771H16.8751C17.0438 7.4771 17.2126 7.39272 17.3251 7.28022C17.4376 7.1396 17.4938 6.97085 17.4938 6.8021C17.2688 3.28647 14.3438 0.55835 10.8563 0.55835ZM11.4751 6.15522V1.8521C13.8095 2.13335 15.6938 3.8771 16.1438 6.18335H11.4751V6.15522Z"
+                       fill=""
+                     />
+                     <path
+                       d="M15.3845 8.7427H9.1126V2.69582C9.1126 2.35832 8.83135 2.07707 8.49385 2.07707C8.40947 2.07707 8.3251 2.07707 8.24072 2.07707C3.96572 2.04895 0.506348 5.53645 0.506348 9.81145C0.506348 14.0864 3.99385 17.5739 8.26885 17.5739C12.5438 17.5739 16.0313 14.0864 16.0313 9.81145C16.0313 9.6427 16.0313 9.47395 16.0032 9.33332C16.0032 8.99582 15.722 8.7427 15.3845 8.7427ZM8.26885 16.3083C4.66885 16.3083 1.77197 13.4114 1.77197 9.81145C1.77197 6.3802 4.47197 3.53957 7.8751 3.3427V9.36145C7.8751 9.69895 8.15635 10.0083 8.52197 10.0083H14.7938C14.6813 13.4958 11.7845 16.3083 8.26885 16.3083Z"
+                       fill=""
+                     />
+                   </g>
+                   <defs>
+                     <clipPath id="clip0_130_9801">
+                       <rect width="18" height="18" fill="white" transform="translate(0 0.052124)" />
+                     </clipPath>
+                   </defs>
+                 </svg>`,
+        label: 'Settings',
+        route: '/settings',
+      },
+    ]
+  }
 ])
 
 

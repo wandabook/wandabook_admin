@@ -3,23 +3,16 @@ import { computed, onBeforeMount } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
 import DefaultLayout from './layouts/DefaultLayout.vue';
 import router from './router';
-
-
-
-const isLogin = true;
-
-// const isLogin = computed<boolean>(() => {
-//   return( router.currentRoute.value.path === '/auth/signin')|| (router.currentRoute.value.path === '/');
-// });
+const isLogin = computed<boolean>(() => {
+  return (router.currentRoute.value.path === '/login');
+});
 
 
 </script>
 
 <template>
   <template v-if="isLogin">
-    <DefaultLayout>
-      <RouterView />
-    </DefaultLayout>
+    <RouterView />
   </template>
   <template v-else>
     <DefaultLayout>

@@ -17,6 +17,10 @@ export const getDocuments = async () => {
     );
 }
 
-const login = (email: string, password: string) => {
-    account.createEmailPasswordSession(email, password);
+export const login = (email: string, password: string) => {
+    return account.createEmailPasswordSession(email, password);
+}
+
+export const users = () => {
+
 }

@@ -18,7 +18,7 @@ const rowData = ref([
 
 // Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
-    { field: "barcode" },
+    { field: "barcode", },
     { field: "first_name", headerName: 'First Name' },
     { field: "last_name", headerName: 'Last Name' },
     { field: "email" },
@@ -33,8 +33,14 @@ const colDefs = ref([
 <template>
     <div>
         <div>
-            <h1 class="text-5xl font-extrabold mb-10">Patrons</h1>
+            <h1 class="text-5xl font-extrabold mb-10">Users</h1>
         </div>
+        <div class="flex justify-end items-center mb-4">
+            <button class="px-4 py-2 bg-pink-500 text-sm rounded-md text-white hover:bg-pink-600">
+                + Create user
+            </button>
+        </div>
+
         <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz">
         </ag-grid-vue>
     </div>
