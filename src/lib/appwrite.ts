@@ -1,4 +1,4 @@
-import { Client, Account, Functions, ExecutionMethod, Databases, ID } from 'appwrite';
+import { Client, Account, Functions, ExecutionMethod, Databases, ID, Query } from 'appwrite';
 export { ID } from 'appwrite';
 export const client = new Client();
 const databases = new Databases(client);
@@ -14,6 +14,21 @@ export const getDocuments = async () => {
         '671bb91d000cd2063080',
         [
         ]
+    );
+}
+export const getSingleDocuments = async (documentId: string) => {
+    return await databases.getDocument(
+        '671bb8f9000c6e9bf6a0',
+        '671bb91d000cd2063080',
+        documentId
+    );
+}
+
+export const getActivities = async (documentId: string) => {
+    return await databases.listDocuments(
+        '671bb8f9000c6e9bf6a0',
+        '673c47ef003a877f040a',
+        [Query.equal('patrons', documentId)]
     );
 }
 

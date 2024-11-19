@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('@/views/PatronsView.vue')
     },
     {
+      path: '/patrons/:documentId',
+      name: 'patronsDetails',
+      component: () => import('@/views/PatronDetail.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue')
