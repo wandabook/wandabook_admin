@@ -1,9 +1,33 @@
 <script setup lang="ts">
 import 'ag-grid-community/styles/ag-grid.css';
 import { AgGridVue } from 'ag-grid-vue3';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+import { getDocuments } from '../lib/appwrite';
+const patrons = ref();
+onMounted(async () => {
+    const result = await getDocuments();
+    if (result.documents != null && result.documents.length > 0) {
+        patrons.value = result.documents;
+    }
+    console.log(result);
+})
 
+const rowData = ref([
+]);
+
+// Column Definitions: Defines the columns to be displayed.
+const colDefs = ref([
+    { field: "barcode" },
+    { field: "first_name", headerName: 'First Name' },
+    { field: "last_name", headerName: 'Last Name' },
+    { field: "email" },
+    { field: "phone" },
+    { field: "freeze" },
+    { field: "address" },
+    { field: "cni" },
+    { field: "subcriptionPlan" }
+]);
 // Statistiques principales
 const stats = [
     { title: 'Personnes en freeze', value: 12, icon: 'fas fa-user-slash' },
@@ -55,9 +79,9 @@ const filteredSubscriptions = computed(() => {
             <div class="text-3xl font-bold mb-6">Dashboard Bibliothèque</div>
 
             <!-- Section des statistiques principales -->
-            <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-3 gap-4 mb-6 ">
                 <div v-for="stat in stats" :key="stat.title"
-                    class="bg-gray-800 p-4 rounded-lg shadow-md flex items-center justify-between">
+                    class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
                         <div class="text-2xl font-semibold">{{ stat.value }}</div>
                         <div class="text-gray-400 text-sm">{{ stat.title }}</div>
@@ -69,26 +93,10 @@ const filteredSubscriptions = computed(() => {
             </div>
 
             <!-- Tableau des nouveaux utilisateurs de la semaine -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <div class="text-lg font-semibold mb-4">Nouveaux utilisateurs cette semaine</div>
-                <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="userColumnDefs" :rowData="newUsers"
+                <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDefs" :rowData="patrons"
                     :pagination="true" :paginationPageSize="10"></ag-grid-vue>
-            </div>
-
-            <!-- Tableau filtrable par type d'abonnement -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="text-lg font-semibold">Abonnements par type</div>
-                    <select v-model="subscriptionFilter" class="bg-gray-700 text-gray-300 p-2 rounded-md">
-                        <option value="">Tous les types</option>
-                        <option value="1 mois">1 mois</option>
-                        <option value="3 mois">3 mois</option>
-                        <option value="6 mois">6 mois</option>
-                        <option value="1 an">1 an</option>
-                    </select>
-                </div>
-                <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="subscriptionColumnDefs"
-                    :rowData="filteredSubscriptions" :pagination="true" :paginationPageSize="10"></ag-grid-vue>
             </div>
         </div>
 

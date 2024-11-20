@@ -1,4 +1,4 @@
-import { Client, Account, Functions, ExecutionMethod, Databases, ID, Query } from 'appwrite';
+import { Client, Account, Databases, ID, Query, } from 'appwrite';
 export { ID } from 'appwrite';
 export const client = new Client();
 const databases = new Databases(client);
@@ -7,7 +7,7 @@ client
     .setProject('671629940021dc2b8ecb'); // Replace with your project ID
 
 export const account = new Account(client);
-const functions = new Functions(client);
+const databaseId = '671bb8f9000c6e9bf6a0';
 export const getDocuments = async () => {
     return await databases.listDocuments(
         '671bb8f9000c6e9bf6a0',
@@ -38,4 +38,29 @@ export const login = (email: string, password: string) => {
 
 export const users = () => {
 
+}
+
+
+export const getDocumentsGlobal = async (collectionId: string) => {
+    return await databases.listDocuments(
+        databaseId,
+        collectionId,
+        [
+        ]
+    );
+}
+export const getSingleDocumentsGlobal = async (documentId: string, collectionId: string) => {
+    return await databases.getDocument(
+        databaseId,
+        collectionId,
+        documentId
+    );
+}
+export const createDocumentGlobal = async (collectionId: string, data: any) => {
+    return await databases.createDocument(
+        databaseId,
+        collectionId,
+        ID.unique(),
+        data
+    );
 }

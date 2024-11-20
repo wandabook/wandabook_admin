@@ -1,0 +1,1 @@
+export const subscriptionCollection = "673cb3a7000e8439bf28";

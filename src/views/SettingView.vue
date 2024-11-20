@@ -11,16 +11,7 @@
 
         <!-- Users Section -->
         <div class=" p-6 rounded-lg ">
-            <!-- Top Bar -->
-            <div class="flex justify-end items-center mb-4">
-                <button class="px-4 py-2 bg-pink-500 text-sm rounded-md text-white hover:bg-pink-600">
-                    + Create user
-                </button>
-            </div>
-
-            <!-- AG Grid -->
-            <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="columnDefs" :rowData="rowData"
-                :pagination="true" :paginationPageSize="12"></ag-grid-vue>
+            <PricingView />
         </div>
     </div>
 </template>
@@ -28,6 +19,7 @@
 <script setup lang="ts">
 import 'ag-grid-community/styles/ag-grid.css';
 import { AgGridVue } from 'ag-grid-vue3';
+import PricingView from './PricingView.vue';
 const nameRenderer = (params: any) => {
     return `<div class="flex items-center space-x-2">
                 <div class="bg-pink-500 text-white rounded-full h-8 w-8 flex items-center justify-center">
