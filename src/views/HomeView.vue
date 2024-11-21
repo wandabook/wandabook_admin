@@ -8,7 +8,9 @@ const patrons = ref();
 onMounted(async () => {
     const result = await getDocuments();
     if (result.documents != null && result.documents.length > 0) {
-        patrons.value = result.documents;
+        patrons.value = result.documents.map((e) => {
+            return { ...e, subcriptionPlanTitle: e.subscriptionPlan?.title }
+        })
     }
     console.log(result);
 })
@@ -26,7 +28,8 @@ const colDefs = ref([
     { field: "freeze" },
     { field: "address" },
     { field: "cni" },
-    { field: "subcriptionPlan" }
+    { field: "isAnnual", headerName: 'Annual' },
+    { field: "subcriptionPlanTitle", headerName: 'Subscription Plan' }
 ]);
 // Statistiques principales
 const stats = [
@@ -69,7 +72,9 @@ const filteredSubscriptions = computed(() => {
         (sub) => sub.subscriptionType === subscriptionFilter
     );
 });
-
+const onCellClicked = (e: any) => {
+    window.location.href = '/patrons/' + e.data.$id;
+}
 </script>
 
 <template>
@@ -96,7 +101,7 @@ const filteredSubscriptions = computed(() => {
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <div class="text-lg font-semibold mb-4">Nouveaux utilisateurs cette semaine</div>
                 <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDefs" :rowData="patrons"
-                    :pagination="true" :paginationPageSize="10"></ag-grid-vue>
+                    :pagination="true" :paginationPageSize="10" @row-clicked="onCellClicked"></ag-grid-vue>
             </div>
         </div>
 

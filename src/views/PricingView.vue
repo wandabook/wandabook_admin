@@ -52,6 +52,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { createDocumentGlobal, getDocumentsGlobal } from "../lib/appwrite";
 import { subscriptionCollection } from "../components/Utilities/constants";
 import Spinner from "../components/Utilities/Spinner.vue";
+import Actions from "./Actions.vue";
 const isCreation = ref(false);
 const subscriptions = ref();
 
@@ -88,6 +89,18 @@ const closeModal = () => {
     formData.value = { title: '', description: '', monthly_amount: '', yearly_amount: '', status: 'active' };
 }
 
+const CustomButtonComponent = {
+    template: `
+        <div>        
+            <button v-on:click="buttonClicked">Push Me!</button>
+        </div>
+    `,
+    methods: {
+        buttonClicked() {
+            alert("clicked");
+        },
+    },
+};
 const columnDefs = [
     { headerName: "Title", field: "title", sortable: true },
     { headerName: "Description", field: "description" },
@@ -95,12 +108,10 @@ const columnDefs = [
     { headerName: "Yearly Amount", field: "yearly_amount" },
     { headerName: "Status", field: "status" },
     {
+        field: "button",
         headerName: "Actions",
-        cellRenderer: 'actionsRenderer',
-        cellRendererParams: {
-            onEdit: openEditModal,
-            onDelete: deleteSubscription
-        }
+        cellRenderer: 'Actions',
+
     }
 ];
 const formData = ref({

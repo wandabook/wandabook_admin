@@ -19,7 +19,26 @@
                 <div><strong>Last Name:</strong> {{ patron.last_name }}</div>
                 <div><strong>Email:</strong> {{ patron.email }}</div>
                 <div><strong>Phone:</strong> {{ patron.phone }}</div>
-                <div><strong>Subscription Plan:</strong> {{ patron.subscriptionPlan }}</div>
+                <div><strong>Subscription Plan:</strong> {{ patron.subscriptionPlan?.title }}</div>
+                <div><strong>Duration Plan:</strong> {{ patron.isAnnual ? "Year" : "Month" }}</div>
+                <div><strong>Last Subscription:</strong> {{
+                    new Intl.DateTimeFormat('fr-CM',
+                        {
+                            dateStyle: 'full',
+                            timeStyle: 'long',
+                        }
+                    ).format(new Date(patron.lastSubcriptionDate))
+
+                }}</div>
+                <div><strong>Expired Date:</strong>{{
+                    new Intl.DateTimeFormat('fr-CM',
+                        {
+                            dateStyle: 'full',
+                            timeStyle: 'long',
+                        }
+                    ).format(new Date(patron.endSubscriptionDate))
+
+                }} </div>
                 <div><strong>Address:</strong> {{ patron.address }}</div>
                 <div><strong>CNI:</strong> {{ patron.cni }}</div>
                 <div>

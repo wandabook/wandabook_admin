@@ -8,7 +8,9 @@ const patrons = ref();
 onMounted(async () => {
     const result = await getDocuments();
     if (result.documents != null && result.documents.length > 0) {
-        patrons.value = result.documents;
+        patrons.value = result.documents.map((e) => {
+            return { ...e, subcriptionPlanTitle: e.subscriptionPlan?.title }
+        })
     }
     console.log(result);
 })
@@ -26,8 +28,12 @@ const colDefs = ref([
     { field: "freeze" },
     { field: "address" },
     { field: "cni" },
-    { field: "subcriptionPlan" }
+    { field: "isAnnual", headerName: 'Annual' },
+    { field: "subcriptionPlanTitle", headerName: 'Subscription Plan' }
 ]);
+const onCellClicked = (e: any) => {
+    window.location.href = '/patrons/' + e.data.$id;
+}
 </script>
 
 <template>
@@ -35,7 +41,8 @@ const colDefs = ref([
         <div>
             <h1 class="text-5xl font-extrabold mb-10">Patrons</h1>
         </div>
-        <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz">
+        <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz"
+            @row-clicked="onCellClicked">
         </ag-grid-vue>
     </div>
 </template>
