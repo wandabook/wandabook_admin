@@ -64,3 +64,18 @@ export const createDocumentGlobal = async (collectionId: string, data: any) => {
         data
     );
 }
+export const editDocumentGlobal = async (collectionId: string, documentId: string, data: any) => {
+    return await databases.updateDocument(
+        databaseId,
+        collectionId,
+        documentId,
+        data
+    );
+}
+export const deleteDocumentGlobal = async (collectionId: string, documentId: string) => {
+    return await databases.deleteDocument(
+        databaseId,
+        collectionId,
+        documentId,
+    );
+}

@@ -1,43 +1,44 @@
 <template>
     <div class="action-buttons">
-        <button @click="onEdit">Edit</button>
-        <button @click="onDelete">Delete</button>
+        <button @click="onEdit" data-action="edit">Edit</button>
+        <button @click="onDelete" data-action="delete">Delete</button>
     </div>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(
-    {
-        value: String, data: Object, onEditClicked: Function, onDeleteClicked: Function
-    }
-)
+const emit = defineEmits(['cellButtonClicked', 'delete']);
 const onEdit = () => {
-    //  props.onEditClicked(this.data);
+    emit('cellButtonClicked', { edit: true });
 };
 const onDelete = () => {
-    //   props.onDeleteClicked(props.data);
+    emit('delete')
 };
 
 </script>
 
-<style scoped>
+<style>
 .action-buttons {
     display: flex;
     gap: 10px;
+    margin-top: 1px;
 }
 
-button {
-    padding: 5px 10px;
+.action-buttons button {
+    padding: 0px 10px;
     border: none;
     cursor: pointer;
     color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10%;
 }
 
-button:first-of-type {
+.action-buttons button:first-of-type {
     background-color: #007bff;
 }
 
-button:last-of-type {
+.action-buttons button:last-of-type {
     background-color: #dc3545;
 }
 </style>
