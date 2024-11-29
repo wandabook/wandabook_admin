@@ -55,8 +55,9 @@
             <h2 class="text-2xl font-semibold mb-4">Actions</h2>
             <div class="flex space-x-4">
                 <button @click="toggleFreeze"
-                    :class="patron.freeze ? 'bg-green-500 hover:bg-green-600' : 'bg-red hover:bg-red-600 text-white'"
-                    class="px-4 py-2 rounded-md">
+                    :class="patron.freeze ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-red hover:bg-red-600 text-white'"
+                    class="px-4 py-2 rounded-md flex gap-3">
+                    <Spinner v-if="isFreezing" />
                     {{ patron.freeze ? 'Unfreeze' : 'Freeze' }}
                 </button>
                 <button @click="editPatron" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
@@ -66,7 +67,9 @@
                     class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-white">
                     Renew Subscription
                 </button>
-                <button @click="deletePatron" class="px-4 py-2 bg-red hover:bg-red-800 rounded-md text-white">
+                <button @click="deletePatron" class="px-4 py-2 bg-red hover:bg-red-800 rounded-md text-white flex">
+                    <Spinner v-if="isDeleting" />
+
                     Delete Patron
                 </button>
             </div>
@@ -90,12 +93,15 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
 import { AgGridVue } from "ag-grid-vue3";
 import router from "../router";
-import { getActivities, getSingleDocuments } from "../lib/appwrite";
+import { deleteUser, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
+import Spinner from "../components/Utilities/Spinner.vue";
 
 const { documentId } = router.currentRoute.value.params;
 
 const patron = ref();
 const showPopup = ref(false);
+const isDeleting = ref(false);
+const isFreezing = ref(false);
 const popupTitle = ref("");
 const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);
@@ -119,19 +125,34 @@ const toggleFreeze = () => {
     popupTitle.value = patron.value.freeze ? "Unfreeze Patron" : "Freeze Patron";
     popupMessage.value = `Are you sure you want to ${patron.value.freeze ? "unfreeze" : "freeze"
         } this patron?`;
-    actionToConfirm.value = () => {
+    actionToConfirm.value = async () => {
+        isFreezing.value = true;
+        await updateUser({
+            patron_id: patron.value.patron_id,
+            tags: patron.value.tags,
+            barcode: patron.value.barcode,
+            freeze: !patron.value.freeze
+        }, patron.value.$id);
         patron.value.freeze = !patron.value.freeze;
+        isFreezing.value = false;
         alert(`Patron is now ${patron.value.freeze ? "frozen" : "active"}.`);
     };
     showPopup.value = true;
 };
 
 const deletePatron = () => {
+    console.log('patron', patron.value);
     popupTitle.value = "Delete Patron";
     popupMessage.value = "Are you sure you want to delete this patron? This action cannot be undone.";
-    actionToConfirm.value = () => {
-        alert("Patron deleted successfully.");
-        // Add deletion logic here
+    actionToConfirm.value = async () => {
+        isDeleting.value = true;
+        const result = await deleteUser({
+            documentId: patron.value.$id,
+            barcode: patron.value.barcode
+        });
+        isDeleting.value = false;
+        history.back();
+        console.log('result', result);
     };
     showPopup.value = true;
 };

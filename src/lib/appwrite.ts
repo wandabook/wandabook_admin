@@ -1,4 +1,5 @@
-import { Client, Account, Databases, ID, Query, } from 'appwrite';
+import { Client, Account, Databases, ID, Query, Functions, ExecutionMethod, } from 'appwrite';
+import { patronCollection } from '../components/Utilities/constants';
 export { ID } from 'appwrite';
 export const client = new Client();
 const databases = new Databases(client);
@@ -78,4 +79,33 @@ export const deleteDocumentGlobal = async (collectionId: string, documentId: str
         collectionId,
         documentId,
     );
+}
+
+const functions = new Functions(client);
+
+export const deleteUser = async (data: any) => {
+    const result = await functions.createExecution(
+        '6724cc3e00047f95c411', // functionId
+        JSON.stringify(data), // body (optional)
+        false, // async (optional)
+        'patron', // path (optional)
+        ExecutionMethod.DELETE, // method (optional)
+        {}, // headers (optional)
+    );
+    await deleteDocumentGlobal(patronCollection, data.documentId);
+    return result;
+}
+
+export const updateUser = async (data: any, documentId: string) => {
+    const dataJ = { ...data, freeze: data.freeze ? 1 : null }
+    const result = await functions.createExecution(
+        '6724cc3e00047f95c411', // functionId
+        JSON.stringify(dataJ), // body (optional)
+        false, // async (optional)
+        'patron', // path (optional)
+        ExecutionMethod.PUT, // method (optional)
+        {}, // headers (optional)
+    );
+    await editDocumentGlobal(patronCollection, documentId, data);
+    return result;
 }
