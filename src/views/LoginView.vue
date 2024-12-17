@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { login } from '../lib/appwrite';
+import { onMounted, ref } from 'vue';
+import { getUser, login, users } from '../lib/appwrite';
 import { userSessionStore } from '../stores';
+import { useUserStore } from '../stores/user';
 
 const password = ref('');
 const email = ref('');
 const isLoading = ref(false);
 const session = userSessionStore();
+const userStore = useUserStore();
 const loginUser = async () => {
     try {
         isLoading.value = true;
         const ss = await login(email.value, password.value);
         session.toggleSidebar(ss);
-        window.location.href = '/dasboard';
+        userStore.login(await getUser(), ss.userId);
+        window.location.href = '/';
     } catch (e) {
 
     } finally {
@@ -20,6 +23,10 @@ const loginUser = async () => {
     }
 
 }
+
+onMounted(async () => {
+    console.log()
+})
 </script>
 
 <template>
@@ -32,13 +39,13 @@ const loginUser = async () => {
 
                 <div class="bg-white rounded shadow">
                     <div class="border-b py-8 font-bold text-black text-center text-xl tracking-widest uppercase">
-                        Welcome back!
+                        {{ $t('welcome_back') }}
                     </div>
 
                     <form class="bg-grey-lightest px-10 py-10" @submit.prevent="loginUser">
                         <div class="mb-3">
-                            <input class="border w-full p-3" name="email" type="text" placeholder="E-Mail" required
-                                v-model="email">
+                            <input class="border w-full p-3" name="email" type="text" :placeholder="$t('email')"
+                                required v-model="email">
                         </div>
                         <div class="mb-6">
                             <input class="border w-full p-3" name="password" type="password"
@@ -58,15 +65,15 @@ const loginUser = async () => {
                                         fill="currentColor" />
                                 </svg>
 
-                                Login
+                                {{ $t('login') }}
                             </button>
                         </div>
                     </form>
 
                     <div class="border-t px-10 py-6">
                         <div class="flex justify-between">
-                            <a href="#" class="font-bold text-primary hover:text-primary-dark no-underline"> Forgot
-                                Password?</a>
+                            <a href="#" class="font-bold text-primary hover:text-primary-dark no-underline">{{
+                                $t('forgot_password') }}</a>
                         </div>
                     </div>
                 </div>

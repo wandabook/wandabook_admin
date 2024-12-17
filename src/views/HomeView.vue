@@ -3,8 +3,13 @@ import 'ag-grid-community/styles/ag-grid.css';
 import { AgGridVue } from 'ag-grid-vue3';
 import { computed, onMounted, ref } from 'vue';
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
-import { getDocuments } from '../lib/appwrite';
-const patrons = ref();
+import { getDocuments, getDocumentsFreeze } from '../lib/appwrite';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
+
+const patrons = ref<any>([]);
+const freezesPatrons = ref<any>([]);
+
 onMounted(async () => {
     const result = await getDocuments();
     if (result.documents != null && result.documents.length > 0) {
@@ -12,31 +17,26 @@ onMounted(async () => {
             return { ...e, subcriptionPlanTitle: e.subscriptionPlan?.title }
         })
     }
-    console.log(result);
-})
+    console.log(result); const freezes = await getDocumentsFreeze();
+    if (freezes.documents != null && freezes.documents.length > 0) {
+        freezesPatrons.value = freezes.documents;
+    }
 
-const rowData = ref([
-]);
+})
 
 // Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
     { field: "barcode" },
-    { field: "first_name", headerName: 'First Name' },
-    { field: "last_name", headerName: 'Last Name' },
-    { field: "email" },
-    { field: "phone" },
-    { field: "freeze" },
-    { field: "address" },
-    { field: "cni" },
-    { field: "isAnnual", headerName: 'Annual' },
+    { field: "first_name", headerName: t("first_name") },
+    { field: "last_name", headerName: t('last_name') },
+    { field: "email", headerName: t('email') },
+    { field: "phone", headerName: t('phone') },
+    { field: "freeze", headerName: t('freeze') },
+    { field: "address", headerName: t('address') },
+    { field: "cni", headerName: t('cni') },
+    { field: "isAnnual", headerName: t('annuel') },
     { field: "subcriptionPlanTitle", headerName: 'Subscription Plan' }
 ]);
-// Statistiques principales
-const stats = [
-    { title: 'Personnes en freeze', value: 12, icon: 'fas fa-user-slash' },
-    { title: 'Abonnements expirant cette semaine', value: 8, icon: 'fas fa-calendar-alt' },
-    { title: 'Abonnements non renouvelés', value: 5, icon: 'fas fa-sync-alt' },
-];
 
 // Colonnes et données des nouveaux utilisateurs
 const userColumnDefs = [
@@ -45,18 +45,8 @@ const userColumnDefs = [
     { field: 'subscriptionType', headerName: 'Type d\'abonnement', flex: 1 },
     { field: 'joinedDate', headerName: 'Date d\'inscription', flex: 1 },
 ];
-const newUsers = [
-    { name: 'Alice Dupont', email: 'alice@example.com', subscriptionType: '1 an', joinedDate: '2024-11-15' },
-    { name: 'John Doe', email: 'john@example.com', subscriptionType: '1 mois', joinedDate: '2024-11-16' },
-];
 
-// Colonnes et données des abonnements
-const subscriptionColumnDefs = [
-    { field: 'name', headerName: 'Nom', flex: 1 },
-    { field: 'subscriptionType', headerName: 'Type d\'abonnement', flex: 1 },
-    { field: 'status', headerName: 'Statut', flex: 1 },
-    { field: 'renewalDate', headerName: 'Date de renouvellement', flex: 1 },
-];
+
 
 const subscriptions = [
     { name: 'Alice Dupont', subscriptionType: '1 an', status: 'Actif', renewalDate: '2025-11-15' },
@@ -81,25 +71,48 @@ const onCellClicked = (e: any) => {
     <div>
         <div class="bg-gray-900  min-h-screen p-6">
             <!-- Header -->
-            <div class="text-3xl font-bold mb-6">Dashboard Bibliothèque</div>
+            <div class="text-3xl font-bold mb-6">{{ $t('lb_dashboard') }}</div>
 
             <!-- Section des statistiques principales -->
-            <div class="grid grid-cols-3 gap-4 mb-6 ">
-                <div v-for="stat in stats" :key="stat.title"
-                    class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+            <div class="grid grid-cols-4 gap-4 mb-6 ">
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
-                        <div class="text-2xl font-semibold">{{ stat.value }}</div>
-                        <div class="text-gray-400 text-sm">{{ stat.title }}</div>
+                        <div class="text-xl font-semibold">{{ $t('total_patrons') }}</div>
+                        <div class="text-gray-400 text-sm">{{ patrons.length }}</div>
                     </div>
-                    <div class="bg-pink-500 p-3 rounded-full">
-                        <i :class="stat.icon" class="text-white"></i>
+                    <div class="bg-green-800  p-3 rounded-full">
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <div class="text-xl font-semibold">{{ $t('block_user') }}</div>
+                        <div class="text-gray-400 text-sm">{{ freezesPatrons.length }}</div>
+                    </div>
+                    <div class="bg-red p-3 rounded-full">
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <div class="text-xl font-semibold">{{ $t('subscription_expired_this_week') }}</div>
+                        <div class="text-gray-400 text-sm">{{ freezesPatrons.length }}</div>
+                    </div>
+                    <div class="bg-yellow-400  p-3 rounded-full">
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <div class="text-xl font-semibold">{{ $t('not_renewed') }}</div>
+                        <div class="text-gray-400 text-sm">{{ freezesPatrons.length }}</div>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-full">
                     </div>
                 </div>
             </div>
 
+
             <!-- Tableau des nouveaux utilisateurs de la semaine -->
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <div class="text-lg font-semibold mb-4">Nouveaux utilisateurs cette semaine</div>
+                <div class="text-lg font-semibold mb-4">{{ $t('new_user_this_week') }}</div>
                 <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDefs" :rowData="patrons"
                     :pagination="true" :paginationPageSize="10" @row-clicked="onCellClicked"></ag-grid-vue>
             </div>

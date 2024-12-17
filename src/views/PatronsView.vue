@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getDocuments } from '../lib/appwrite';
+import { getDocuments, getDocumentsFreeze } from '../lib/appwrite';
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
-const patrons = ref();
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
+
+const patrons = ref<any>([]);
 onMounted(async () => {
     const result = await getDocuments();
     if (result.documents != null && result.documents.length > 0) {
@@ -12,25 +15,25 @@ onMounted(async () => {
             return { ...e, subcriptionPlanTitle: e.subscriptionPlan?.title }
         })
     }
-    console.log(result);
+
 })
 
 const rowData = ref([
 ]);
-
 // Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
     { field: "barcode" },
-    { field: "first_name", headerName: 'First Name' },
-    { field: "last_name", headerName: 'Last Name' },
-    { field: "email" },
-    { field: "phone" },
-    { field: "freeze" },
-    { field: "address" },
-    { field: "cni" },
-    { field: "isAnnual", headerName: 'Annual' },
+    { field: "first_name", headerName: t("first_name") },
+    { field: "last_name", headerName: t('last_name') },
+    { field: "email", headerName: t('email') },
+    { field: "phone", headerName: t('phone') },
+    { field: "freeze", headerName: t('freeze') },
+    { field: "address", headerName: t('address') },
+    { field: "cni", headerName: t('cni') },
+    { field: "isAnnual", headerName: t('annuel') },
     { field: "subcriptionPlanTitle", headerName: 'Subscription Plan' }
 ]);
+
 const onCellClicked = (e: any) => {
     window.location.href = '/patrons/' + e.data.$id;
 }

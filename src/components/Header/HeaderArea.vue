@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { useSidebarStore } from '@/stores/sidebar'
 import type { OrderDTODish } from '@/types/OrderDTO';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import router from '../../router';
+import LanguageButton from '../languages/LanguageButton.vue';
+import ProfileAvatar from '../profile/ProfileAvatar.vue';
 
 const { toggleSidebar } = useSidebarStore()
 const sidebarStore = useSidebarStore()
 const searchQuery = ref('');
+const currentRoute = router.currentRoute;
 
 </script>
 
@@ -50,22 +54,22 @@ const searchQuery = ref('');
       </div>
       <!-- Mobile menu end -->
       <!-- search bar -->
-      <div class="flex items-center p-2 rounded-lg bg-white shadow-lg h-14 w-3/5 sm:w-4/5 md:w-9/12 lg:w-full">
-        <form action="https://formbold.com/s/unique_form_id" method="POST">
-          <div class="relative">
-            <button class="absolute top-1/2 left-0 -translate-y-1/2">
-              <svg class="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary" width="20"
-                height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
-                  fill="" />
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
-                  fill="" />
-              </svg>
-            </button>
+      <div class="flex items-center p-2 bg-white h-14 w-full px-5 justify-between z-50">
+        <div class="flex gap-7 ">
+          <div class="self-center">
+            <span v-for="(tab, i) in currentRoute.path.split('/')">
+              {{ tab.toLocaleUpperCase() }} <span v-if="i != 0 && i < (currentRoute.path.split('/').length - 1)"> >
+              </span>
+            </span>
           </div>
-        </form>
+        </div>
+        <div class="right flex">
+          <LanguageButton class="align-middle items-center justify-center self-center" />
+          <div class="hidden sm:inline">
+            <ProfileAvatar />
+          </div>
+        </div>
+
       </div>
       <!-- search bar -->
 

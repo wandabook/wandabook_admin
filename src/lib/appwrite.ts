@@ -109,3 +109,16 @@ export const updateUser = async (data: any, documentId: string) => {
     await editDocumentGlobal(patronCollection, documentId, data);
     return result;
 }
+
+export const getDocumentsFreeze = async () => {
+    return await databases.listDocuments(
+        '671bb8f9000c6e9bf6a0',
+        '671bb91d000cd2063080',
+        [
+            Query.equal('freeze', true)
+        ]
+    );
+}
+export const getUser = async () => {
+    return await account.get()
+}
