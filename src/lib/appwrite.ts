@@ -37,8 +37,16 @@ export const login = (email: string, password: string) => {
     return account.createEmailPasswordSession(email, password);
 }
 
-export const users = () => {
-
+export const users = async () => {
+    const result = await functions.createExecution(
+        '6725080b0013accf3a71', // functionId
+        '', // body (optional)
+        false, // async (optional)
+        'users', // path (optional)
+        ExecutionMethod.GET, // method (optional)
+        {}, // headers (optional)
+    );
+    return result;
 }
 
 

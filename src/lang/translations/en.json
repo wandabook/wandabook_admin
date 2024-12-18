@@ -46,5 +46,17 @@
   "annual": "Annual",
   "subcription_Plan": "Subscription Plan",
   "welcome_back": "Welcome back!",
-  "forgot_password": "Forgot Password?"
+  "forgot_password": "Forgot Password?",
+  "accessedAt": "accessed At",
+  "suggestions": "Suggestions",
+  "subject": "Subject",
+  "description": "Description",
+  "createdAt": "Created At",
+  "dashboard": "Dashboard",
+  "patrons": "Patrons",
+  "users": "Users",
+  "others": "Others",
+  "subscription_plan": "Subscription Plan",
+  "create_user": "Create User",
+  "new_patons": "New Patron"
 }

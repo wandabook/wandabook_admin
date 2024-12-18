@@ -5,6 +5,8 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
 import { suggestionCollection } from '../../components/Utilities/constants';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 const suggestions = ref();
 onMounted(async () => {
     const result = await getDocumentsGlobal(suggestionCollection);
@@ -19,17 +21,17 @@ onMounted(async () => {
 
 // Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
-    { field: "name" },
-    { field: "subject", },
-    { field: "description", },
-    { field: "$createdAt", headerName: "Created" },
+    { field: "name", headerName: t('name') },
+    { field: "subject", headerName: t('subject') },
+    { field: "description", headerName: t('description') },
+    { field: "$createdAt", headerName: t('createdAt') },
 ]);
 </script>
 
 <template>
     <div>
         <div>
-            <h1 class="text-5xl font-extrabold mb-10">Suggestions</h1>
+            <h1 class="text-5xl font-extrabold mb-10">{{ $t('suggestions') }}</h1>
         </div>
         <ag-grid-vue :rowData="suggestions" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz">
         </ag-grid-vue>

@@ -31,7 +31,7 @@ const colDefs = ref([
     { field: "address", headerName: t('address') },
     { field: "cni", headerName: t('cni') },
     { field: "isAnnual", headerName: t('annuel') },
-    { field: "subcriptionPlanTitle", headerName: 'Subscription Plan' }
+    { field: "subcriptionPlanTitle", headerName: t('subscription_plan') }
 ]);
 
 const onCellClicked = (e: any) => {
@@ -41,12 +41,17 @@ const onCellClicked = (e: any) => {
 
 <template>
     <div>
-        <div>
-            <h1 class="text-5xl font-extrabold mb-10">Patrons</h1>
+        <div class="flex justify-between">
+            <h1 class="text-5xl font-extrabold mb-10">{{ $t('patrons') }}</h1>
+            <button
+                class="px-6  my-4  rounded-lg font-medium text-white focus:outline-none bg-blue-500 hover:bg-blue-600">{{
+                    $t('new_patons') }}</button>
         </div>
-        <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz"
-            @row-clicked="onCellClicked">
-        </ag-grid-vue>
+        <div class="bg-white p-6 rounded">
+            <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz"
+                @row-clicked="onCellClicked">
+            </ag-grid-vue>
+        </div>
     </div>
 </template>
 

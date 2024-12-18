@@ -24,7 +24,6 @@ onMounted(async () => {
 
 })
 
-// Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
     { field: "barcode" },
     { field: "first_name", headerName: t("first_name") },
@@ -35,7 +34,7 @@ const colDefs = ref([
     { field: "address", headerName: t('address') },
     { field: "cni", headerName: t('cni') },
     { field: "isAnnual", headerName: t('annuel') },
-    { field: "subcriptionPlanTitle", headerName: 'Subscription Plan' }
+    { field: "subcriptionPlanTitle", headerName: t('subscription_plan') }
 ]);
 
 // Colonnes et données des nouveaux utilisateurs
@@ -74,7 +73,7 @@ const onCellClicked = (e: any) => {
             <div class="text-3xl font-bold mb-6">{{ $t('lb_dashboard') }}</div>
 
             <!-- Section des statistiques principales -->
-            <div class="grid grid-cols-4 gap-4 mb-6 ">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 rid-cols-1 gap-4 mb-6 ">
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
                         <div class="text-xl font-semibold">{{ $t('total_patrons') }}</div>
