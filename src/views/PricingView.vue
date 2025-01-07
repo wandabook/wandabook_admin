@@ -1,45 +1,46 @@
 <template>
     <div class="">
-        <h1 class="text-xl font-semibold mb-4">Subscription Management</h1>
+        <h1 class="text-xl font-semibold mb-4">{{ $t('sub_management') }}</h1>
 
         <div class="flex justify-end mb-4">
             <button @click="openCreateModal" class="bg-blue-500 text-white p-2 rounded">
-                Add Subscription
+                {{ $t('add_subscritpion') }}
             </button>
         </div>
 
         <ag-grid-vue :columnDefs="columnDefs" :rowData="subscriptions" :pagination="true" :domLayout="'autoHeight'"
-            class="ag-theme-quartz" @row-clicked="onRowClicked" @cellClicked="onCellClicked"></ag-grid-vue>
+            class="ag-theme-quartz" @row-clicked="onRowClicked" @cellClicked="onCellClicked"
+            :autoSizeStrategy="autoSizeStrategy"></ag-grid-vue>
 
         <!-- Create/Edit Modal -->
         <div v-if="isModalOpen"
             class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-99 shadow-lg">
             <div class="bg-white p-6 rounded-lg w-1/3">
-                <h2 class="text-xl mb-4" v-if="isEditing">Edit Subscription Plan</h2>
-                <h2 class="text-xl mb-4" v-else>New Subscription Plan</h2>
+                <h2 class="text-xl mb-4" v-if="isEditing">{{ $t('edit_subscription') }}</h2>
+                <h2 class="text-xl mb-4" v-else>{{ $t('new_sub_plan') }}</h2>
                 <form @submit.prevent="saveSubscription">
-                    <input v-model="formData.title" type="text" placeholder="Title" class="border p-2 w-full mb-4"
-                        required />
-                    <textarea v-model="formData.description" placeholder="Description" class="border p-2 w-full mb-4"
-                        required></textarea>
-                    <input v-model="formData.monthly_amount" type="number" placeholder="Monthly Amount"
+                    <input v-model="formData.title" type="text" :placeholder="$t('title')"
                         class="border p-2 w-full mb-4" required />
-                    <input v-model="formData.yearly_amount" type="number" placeholder="Yearly Amount"
+                    <textarea v-model="formData.description" :placeholder="$t('description')"
+                        class="border p-2 w-full mb-4" required></textarea>
+                    <input v-model="formData.monthly_amount" type="number" :placeholder="$t('month_amount')"
+                        class="border p-2 w-full mb-4" required />
+                    <input v-model="formData.yearly_amount" type="number" :placeholder="$t('yearly_amount')"
                         class="border p-2 w-full mb-4" required />
                     <select v-model="formData.status" class="border p-2 w-full mb-4" required>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="active">{{ $t('active') }}</option>
+                        <option value="inactive">{{ $t('inactive') }}</option>
                     </select>
                     <div class="flex justify-end space-x-5">
                         <button type="button" class="bg-red text-white p-2 rounded" @click="closeModal"
                             :disabled="isCreation">
-                            Cancel
+                            {{ $t('cancel') }}
                         </button>
                         <button type="submit" class="bg-blue-500 text-white p-2 rounded" :disabled="isCreation">
                             <Spinner v-if="isCreation" />
 
-                            <span v-if="isEditing">Edit Subscription</span>
-                            <span v-else>Save Subscription</span>
+                            <span v-if="isEditing">{{ $t('edit_subscription') }}</span>
+                            <span v-else>{{ $t('save_subscription') }}</span>
                         </button>
                     </div>
                 </form>
@@ -60,10 +61,15 @@ import { subscriptionCollection } from "../components/Utilities/constants";
 import Spinner from "../components/Utilities/Spinner.vue";
 import Actions from "./Actions.vue";
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 defineComponent({
     components: { Actions, AgGridVue }
-})
+});
+const autoSizeStrategy = {
+    type: "fitGridWidth",
+    defaultMinWidth: 100,
+}
 const isCreation = ref(false);
 const isEditing = ref(false);
 const subscriptions = ref();
@@ -126,8 +132,8 @@ const onCellClicked = (e: any) => {
     if (action === 'edit') {
         onEditPricing(e.data);
     } else if (action === 'delete') {
-        popupTitle.value = "Delete Patron";
-        popupMessage.value = "Are you sure you want to delete this patron? This action cannot be undone.";
+        popupTitle.value = t('delete_patron');
+        popupMessage.value = t('delete_patron_message');
         showPopup.value = true;
     }
 }
@@ -140,11 +146,11 @@ const onDeletePricing = (data: any) => {
     console.log('this is the data to', data);
 }
 const columnDefs = [
-    { headerName: "Title", field: "title", sortable: true },
-    { headerName: "Description", field: "description" },
-    { headerName: "Monthly Amount", field: "monthly_amount" },
-    { headerName: "Yearly Amount", field: "yearly_amount" },
-    { headerName: "Status", field: "status" },
+    { headerName: t("title"), field: "title", sortable: true },
+    { headerName: t("description"), field: "description" },
+    { headerName: t("month_amount"), field: "monthly_amount" },
+    { headerName: t("yearly_amount"), field: "yearly_amount" },
+    { headerName: t("status"), field: "status" },
     {
         field: "button",
         headerName: "Actions",

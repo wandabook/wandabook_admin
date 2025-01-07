@@ -30,37 +30,14 @@ const colDefs = ref([
     { field: "last_name", headerName: t('last_name') },
     { field: "email", headerName: t('email') },
     { field: "phone", headerName: t('phone') },
+    { field: "subcriptionPlanTitle", headerName: t('subscription_plan') },
     { field: "freeze", headerName: t('freeze') },
     { field: "address", headerName: t('address') },
     { field: "cni", headerName: t('cni') },
     { field: "isAnnual", headerName: t('annuel') },
-    { field: "subcriptionPlanTitle", headerName: t('subscription_plan') }
 ]);
 
-// Colonnes et données des nouveaux utilisateurs
-const userColumnDefs = [
-    { field: 'name', headerName: 'Nom', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1.5 },
-    { field: 'subscriptionType', headerName: 'Type d\'abonnement', flex: 1 },
-    { field: 'joinedDate', headerName: 'Date d\'inscription', flex: 1 },
-];
 
-
-
-const subscriptions = [
-    { name: 'Alice Dupont', subscriptionType: '1 an', status: 'Actif', renewalDate: '2025-11-15' },
-    { name: 'John Doe', subscriptionType: '1 mois', status: 'Expiré', renewalDate: '2024-12-16' },
-    { name: 'Jane Smith', subscriptionType: '3 mois', status: 'Actif', renewalDate: '2025-02-01' },
-];
-const subscriptionFilter = '' // Filtre sélectionné
-const filteredSubscriptions = computed(() => {
-    if (subscriptionFilter === '') {
-        return subscriptions;
-    }
-    return subscriptions.filter(
-        (sub) => sub.subscriptionType === subscriptionFilter
-    );
-});
 const onCellClicked = (e: any) => {
     window.location.href = '/patrons/' + e.data.$id;
 }

@@ -3,10 +3,10 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <div class="text-3xl font-bold">
-                Patron: {{ patron.first_name }} {{ patron.last_name }}
+                {{ $t('patron') }}: {{ patron.first_name }} {{ patron.last_name }}
             </div>
             <button @click="goBack" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600">
-                Back to Dashboard
+                {{ $t('back_to_dashboard') }}
             </button>
         </div>
 
@@ -14,14 +14,14 @@
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-2xl font-semibold mb-4">Patron Details</h2>
             <div class="grid grid-cols-2 gap-6">
-                <div><strong>Barcode:</strong> {{ patron.barcode }}</div>
-                <div><strong>First Name:</strong> {{ patron.first_name }}</div>
-                <div><strong>Last Name:</strong> {{ patron.last_name }}</div>
-                <div><strong>Email:</strong> {{ patron.email }}</div>
-                <div><strong>Phone:</strong> {{ patron.phone }}</div>
-                <div><strong>Subscription Plan:</strong> {{ patron.subscriptionPlan?.title }}</div>
-                <div><strong>Duration Plan:</strong> {{ patron.isAnnual ? "Year" : "Month" }}</div>
-                <div><strong>Last Subscription:</strong> {{
+                <div><strong>{{ $t('barcode') }}:</strong> {{ patron.barcode }}</div>
+                <div><strong>{{ $t('first_name') }}:</strong> {{ patron.first_name }}</div>
+                <div><strong>{{ $t('last_name') }}:</strong> {{ patron.last_name }}</div>
+                <div><strong>{{ $t('email') }}:</strong> {{ patron.email }}</div>
+                <div><strong>{{ $t('phone') }}:</strong> {{ patron.phone }}</div>
+                <div><strong>{{ $t('subcription_Plan') }}:</strong> {{ patron.subscriptionPlan?.title }}</div>
+                <div><strong>{{ $t('duration_plan') }}:</strong> {{ patron.isAnnual ? "Year" : "Month" }}</div>
+                <div><strong>{{ $t('last_subscription') }}</strong> {{
                     new Intl.DateTimeFormat('fr-CM',
                         {
                             dateStyle: 'full',
@@ -30,7 +30,7 @@
                     ).format(new Date(patron.lastSubcriptionDate))
 
                 }}</div>
-                <div><strong>Expired Date:</strong>{{
+                <div><strong>{{ $t('expired_date') }}:</strong>{{
                     new Intl.DateTimeFormat('fr-CM',
                         {
                             dateStyle: 'full',
@@ -39,10 +39,10 @@
                     ).format(new Date(patron.endSubscriptionDate))
 
                 }} </div>
-                <div><strong>Address:</strong> {{ patron.address }}</div>
-                <div><strong>CNI:</strong> {{ patron.cni }}</div>
+                <div><strong>{{ $t('address') }}:</strong> {{ patron.address }}</div>
+                <div><strong>{{ $t('NIC') }}:</strong> {{ patron.cni }}</div>
                 <div>
-                    <strong>Status:</strong>
+                    <strong>{{ $t('status') }}:</strong>
                     <span :class="patron.freeze ? 'text-red-500' : 'text-green-500'">
                         {{ patron.freeze ? 'Frozen' : 'Active' }}
                     </span>
@@ -61,16 +61,15 @@
                     {{ patron.freeze ? 'Unfreeze' : 'Freeze' }}
                 </button>
                 <button @click="editPatron" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
-                    Edit Patron
+                    {{ $t('edit_patron') }}
                 </button>
                 <button @click="renewSubscription"
                     class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-white">
-                    Renew Subscription
+                    {{ $t('renew_subscription') }}
                 </button>
                 <button @click="deletePatron" class="px-4 py-2 bg-red hover:bg-red-800 rounded-md text-white flex">
                     <Spinner v-if="isDeleting" />
-
-                    Delete Patron
+                    {{ $t('delete_patron') }}
                 </button>
             </div>
         </div>
@@ -95,7 +94,9 @@ import { AgGridVue } from "ag-grid-vue3";
 import router from "../router";
 import { deleteUser, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
 import Spinner from "../components/Utilities/Spinner.vue";
-
+import showAlert from "../helpers/alert";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 const { documentId } = router.currentRoute.value.params;
 
 const patron = ref();
@@ -135,15 +136,14 @@ const toggleFreeze = () => {
         }, patron.value.$id);
         patron.value.freeze = !patron.value.freeze;
         isFreezing.value = false;
-        alert(`Patron is now ${patron.value.freeze ? "frozen" : "active"}.`);
+        showAlert('success', `Patron is now ${patron.value.freeze ? "frozen" : "active"}.`);
     };
     showPopup.value = true;
 };
 
 const deletePatron = () => {
-    console.log('patron', patron.value);
-    popupTitle.value = "Delete Patron";
-    popupMessage.value = "Are you sure you want to delete this patron? This action cannot be undone.";
+    popupTitle.value = t('delete_patron');
+    popupMessage.value = t('delete_patron_message');
     actionToConfirm.value = async () => {
         isDeleting.value = true;
         const result = await deleteUser({
@@ -152,16 +152,15 @@ const deletePatron = () => {
         });
         isDeleting.value = false;
         history.back();
-        console.log('result', result);
     };
     showPopup.value = true;
 };
 
 const renewSubscription = () => {
-    popupTitle.value = "Renew Subscription";
-    popupMessage.value = "Are you sure you want to renew this patron's subscription?";
+    popupTitle.value = t('renew_subscription');
+    popupMessage.value = t('renew_subscription_messsage');
     actionToConfirm.value = () => {
-        alert("Subscription renewed successfully.");
+        showAlert('success', t('renew_succes'));
         // Add renewal logic here
     };
     showPopup.value = true;

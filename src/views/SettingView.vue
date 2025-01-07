@@ -20,9 +20,11 @@ import PricingView from './PricingView.vue';
 import BooksNews from './BooksNews.vue';
 import { ref } from 'vue';
 import CustomTabs from '../components/tabs/CustomTabs.vue';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 const selectTab = ref(1);
-const tabs = [{ name: 'Pricing' }, {
-    name: 'Books new'
+const tabs = [{ name: t('pricing') }, {
+    name: t('books_new')
 }]
 const changeTab = (tab: number) => {
     selectTab.value = tab;

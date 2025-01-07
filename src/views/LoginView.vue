@@ -3,7 +3,9 @@ import { onMounted, ref } from 'vue';
 import { getUser, login, users } from '../lib/appwrite';
 import { userSessionStore } from '../stores';
 import { useUserStore } from '../stores/user';
-
+import showAlert from '../helpers/alert';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 const password = ref('');
 const email = ref('');
 const isLoading = ref(false);
@@ -17,7 +19,7 @@ const loginUser = async () => {
         userStore.login(await getUser(), ss.userId);
         window.location.href = '/';
     } catch (e) {
-
+        showAlert('error', t("login_fail"))
     } finally {
         isLoading.value = false;
     }

@@ -1,45 +1,46 @@
 <template>
     <div class="">
-        <h1 class="text-xl font-semibold mb-4">Book Management</h1>
+        <h1 class="text-xl font-semibold mb-4">{{ $t('book_management') }}</h1>
 
         <div class="flex justify-end mb-4">
             <button @click="openCreateModal" class="bg-blue-500 text-white p-2 rounded">
-                Add Book
+                {{ $t('add_book') }}
             </button>
         </div>
 
         <ag-grid-vue :columnDefs="columnDefs" :rowData="books" :pagination="true" :domLayout="'autoHeight'"
-            class="ag-theme-quartz" @row-clicked="onRowClicked" @cellClicked="onCellClicked"></ag-grid-vue>
+            class="ag-theme-quartz" @row-clicked="onRowClicked" @cellClicked="onCellClicked"
+            :autoSizeStrategy="autoSizeStrategy"></ag-grid-vue>
 
         <!-- Create/Edit Modal -->
         <div v-if="isModalOpen"
             class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-99 shadow-lg">
             <div class="bg-white p-6 rounded-lg w-1/3">
-                <h2 class="text-xl mb-4" v-if="isEditing">Edit Book</h2>
-                <h2 class="text-xl mb-4" v-else>New Book</h2>
+                <h2 class="text-xl mb-4" v-if="isEditing">{{ $t('edit_book') }}</h2>
+                <h2 class="text-xl mb-4" v-else>{{ $t('new_book') }}</h2>
                 <form @submit.prevent="saveBook">
-                    <input v-model="formData.title" type="text" placeholder="Title" class="border p-2 w-full mb-4"
-                        required />
-                    <textarea v-model="formData.description" placeholder="Description" class="border p-2 w-full mb-4"
-                        required></textarea>
-                    <input v-model="formData.image" type="text" placeholder="Image URL" class="border p-2 w-full mb-4"
-                        required />
-                    <input v-model="formData.link" type="text" placeholder="Link" class="border p-2 w-full mb-4"
+                    <input v-model="formData.title" type="text" :placeholder="$t('title')"
+                        class="border p-2 w-full mb-4" required />
+                    <textarea v-model="formData.description" :placeholder="$t('descriptions')"
+                        class="border p-2 w-full mb-4" required></textarea>
+                    <input v-model="formData.image" type="text" :placeholder="$t('image_url')"
+                        class="border p-2 w-full mb-4" required />
+                    <input v-model="formData.link" type="text" :placeholder="$t('link')" class="border p-2 w-full mb-4"
                         required />
                     <select v-model="formData.status" class="border p-2 w-full mb-4" required>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="active">{{ $t('active') }}</option>
+                        <option value="inactive">{{ $t('inactive') }}</option>
                     </select>
                     <div class="flex justify-end space-x-5">
                         <button type="button" class="bg-red text-white p-2 rounded" @click="closeModal"
                             :disabled="isCreation">
-                            Cancel
+                            {{ $t('cancel') }}
                         </button>
                         <button type="submit" class="bg-blue-500 text-white p-2 rounded" :disabled="isCreation">
                             <Spinner v-if="isCreation" />
 
-                            <span v-if="isEditing">Edit Book</span>
-                            <span v-else>Save Book</span>
+                            <span v-if="isEditing">{{ $t('edit_book') }}</span>
+                            <span v-else>{{ $t('save_book') }}</span>
                         </button>
                     </div>
                 </form>
@@ -60,10 +61,15 @@ import { bookCollection } from "../components/Utilities/constants";
 import Spinner from "../components/Utilities/Spinner.vue";
 import Actions from "./Actions.vue";
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 defineComponent({
     components: { Actions, AgGridVue }
 })
+const autoSizeStrategy = {
+    type: "fitGridWidth",
+    defaultMinWidth: 100,
+}
 const isCreation = ref(false);
 const isEditing = ref(false);
 const books = ref();
@@ -140,11 +146,11 @@ const onDeletePricing = (data: any) => {
     console.log('this is the data to', data);
 }
 const columnDefs = [
-    { headerName: "Title", field: "title", sortable: true },
-    { headerName: "Description", field: "description" },
-    { headerName: "Image", field: "image" },
-    { headerName: "Link", field: "link" },
-    { headerName: "Status", field: "status" },
+    { headerName: t("title"), field: "title", sortable: true },
+    { headerName: t("description"), field: "description" },
+    { headerName: t("image_url"), field: "image" },
+    { headerName: t("link"), field: "link" },
+    { headerName: t("status"), field: "status" },
     {
         field: "button",
         headerName: "Actions",

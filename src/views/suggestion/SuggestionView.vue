@@ -18,7 +18,9 @@ onMounted(async () => {
     }
     console.log(result);
 })
-
+const autoSizeStrategy = {
+    type: "fitGridWidth", defaultMinWidth: 100,
+}
 // Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
     { field: "name", headerName: t('name') },
@@ -33,7 +35,8 @@ const colDefs = ref([
         <div>
             <h1 class="text-5xl font-extrabold mb-10">{{ $t('suggestions') }}</h1>
         </div>
-        <ag-grid-vue :rowData="suggestions" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz">
+        <ag-grid-vue :rowData="suggestions" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz"
+            :autoSizeStrategy="autoSizeStrategy">
         </ag-grid-vue>
     </div>
 </template>
