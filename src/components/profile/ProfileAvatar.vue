@@ -32,12 +32,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 const dropdownOpen = ref(false);
 const userStore = useUserStore();
 
-const user = ref({ ...JSON.parse(userStore.getUser), avatar: "https://via.placeholder.com/150" });
+const user = ref<any>({});
 
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
@@ -58,6 +58,12 @@ const logout = () => {
     console.log('Logout clicked');
     userStore.logout();
 };
+
+onMounted(() => {
+    if (userStore.getUser) {
+        user.value = { ...JSON.parse(userStore.getUser), avatar: "https://via.placeholder.com/150" }
+    }
+})
 </script>
 
 <style>
