@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('@/views/PatronsView.vue')
     },
     {
+      path: '/patrons/new',
+      name: 'patrons_new',
+      component: () => import('@/components/patron/PricingComponent.vue')
+    },
+    {
       path: '/patrons/:documentId',
       name: 'patronsDetails',
       component: () => import('@/views/PatronDetail.vue')

@@ -130,3 +130,35 @@ export const getDocumentsFreeze = async () => {
 export const getUser = async () => {
     return await account.get()
 }
+
+
+export const addNewUser = async (data: any) => {
+    const result = await functions.createExecution(
+        '6724cc3e00047f95c411', // functionId
+        data, // body (optional)
+        false, // async (optional)
+        'patron', // path (optional)
+        ExecutionMethod.POST, // method (optional)
+        {}, // headers (optional)
+    );
+    return result;
+}
+
+export const createNewUser = async (data: any) => {
+    return databases.createDocument(
+        '671bb8f9000c6e9bf6a0',
+        '671bb91d000cd2063080',
+        ID.unique(),
+        data
+    );
+}
+
+
+export const getDocumentsWithFilerGlobal = async (collectionId: string, filters: string[]) => {
+    return await databases.listDocuments(
+        databaseId,
+        collectionId,
+        filters
+    );
+}
+

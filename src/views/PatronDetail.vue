@@ -21,7 +21,7 @@
                 <div><strong>{{ $t('phone') }}:</strong> {{ patron.phone }}</div>
                 <div><strong>{{ $t('subcription_Plan') }}:</strong> {{ patron.subscriptionPlan?.title }}</div>
                 <div><strong>{{ $t('duration_plan') }}:</strong> {{ patron.isAnnual ? "Year" : "Month" }}</div>
-                <div><strong>{{ $t('last_subscription') }}</strong> {{
+                <div><strong>{{ $t('last_subscription') }} </strong> {{
                     new Intl.DateTimeFormat('fr-CM',
                         {
                             dateStyle: 'full',
@@ -30,7 +30,7 @@
                     ).format(new Date(patron.lastSubcriptionDate))
 
                 }}</div>
-                <div><strong>{{ $t('expired_date') }}:</strong>{{
+                <div><strong>{{ $t('expired_date') }}: </strong>{{
                     new Intl.DateTimeFormat('fr-CM',
                         {
                             dateStyle: 'full',
@@ -39,12 +39,18 @@
                     ).format(new Date(patron.endSubscriptionDate))
 
                 }} </div>
-                <div><strong>{{ $t('address') }}:</strong> {{ patron.address }}</div>
-                <div><strong>{{ $t('NIC') }}:</strong> {{ patron.cni }}</div>
+                <div><strong>{{ $t('address') }}: </strong> {{ patron.address }}</div>
+                <div><strong>{{ $t('NIC') }}: </strong> {{ patron.cni }}</div>
                 <div>
                     <strong>{{ $t('status') }}:</strong>
                     <span :class="patron.freeze ? 'text-red-500' : 'text-green-500'">
                         {{ patron.freeze ? 'Frozen' : 'Active' }}
+                    </span>
+                </div>
+                <div>
+                    <strong>{{ $t('created_by') }}: </strong>
+                    <span>
+                        {{ patron.created_by_name }}
                     </span>
                 </div>
             </div>
@@ -74,12 +80,12 @@
             </div>
         </div>
 
-        <!-- Patron Activity Logs -->
+        <!-- Patron Activity Logs 
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Activity Logs</h2>
             <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="logColumnDefs" :rowData="activityLogs"
                 :pagination="true" :paginationPageSize="10"></ag-grid-vue>
-        </div>
+        </div>-->
     </div>
     <confirmation-popup v-if="showPopup" :title="popupTitle" :message="popupMessage" :onConfirm="confirmAction"
         :onCancel="cancelAction" />
@@ -118,8 +124,7 @@ const logColumnDefs = [
 
 // Methods
 const goBack = () => {
-    alert("Going back to dashboard...");
-    // Implement navigation logic
+    window.location.href = '/patrons'
 };
 
 const toggleFreeze = () => {
