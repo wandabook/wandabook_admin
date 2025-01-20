@@ -52,7 +52,17 @@ export const users = async () => {
     return result;
 }
 
-
+export const createUser = async (body: string) => {
+    const result = await functions.createExecution(
+        '6725080b0013accf3a71', // functionId
+        body, // body (optional)
+        false, // async (optional)
+        'users', // path (optional)
+        ExecutionMethod.POST, // method (optional)
+        {}, // headers (optional)
+    );
+    return result;
+}
 export const getDocumentsGlobal = async (collectionId: string) => {
     return await databases.listDocuments(
         databaseId,
