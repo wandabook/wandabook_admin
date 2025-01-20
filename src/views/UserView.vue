@@ -30,13 +30,14 @@ const colDefs = ref([
 
 <template>
     <div>
-        <div>
-            <h1 class="text-5xl font-extrabold mb-10">{{ $t('users') }}</h1>
-        </div>
-        <div class="flex justify-end items-center mb-4">
-            <button class="px-4 py-2 bg-primary text-sm rounded-md text-white hover:bg-blue-800">
-                + {{ $t('create_user ') }}
-            </button>
+        <div class="flex justify-between">
+            <div>
+                <h1 class="text-5xl font-extrabold mb-10">{{ $t('users') }}</h1>
+            </div>
+            <div class="justify-center self-center align-middle"><button
+                    class="  px-4 py-2  bg-blue-500  text-sm rounded-md text-white  hover:bg-blue-600">
+                    + {{ $t('create_user') }}
+                </button></div>
         </div>
         <div class="p-6 bg-white rounded">
             <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz">

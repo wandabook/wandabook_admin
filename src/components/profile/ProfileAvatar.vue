@@ -22,7 +22,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" @click="logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                    <a href="#" @click="logoutUse" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
                         {{ $t('logout') }}
                     </a>
                 </li>
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { logout } from '../../lib/appwrite';
 const dropdownOpen = ref(false);
 const userStore = useUserStore();
 
@@ -53,10 +54,12 @@ const openSettings = () => {
     console.log('Settings clicked');
 };
 
-const logout = () => {
+const logoutUse = async () => {
     dropdownOpen.value = false;
     console.log('Logout clicked');
+    await logout();
     userStore.logout();
+    location.reload();
 };
 
 onMounted(() => {

@@ -37,6 +37,9 @@ export const login = (email: string, password: string) => {
     return account.createEmailPasswordSession(email, password);
 }
 
+export const logout = async () => {
+    await account.deleteSession('current');
+}
 export const users = async () => {
     const result = await functions.createExecution(
         '6725080b0013accf3a71', // functionId

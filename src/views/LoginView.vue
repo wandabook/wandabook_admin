@@ -19,6 +19,7 @@ const loginUser = async () => {
         userStore.login(await getUser(), ss.userId);
         window.location.href = '/';
     } catch (e) {
+        console.log(e);
         showAlert('error', t("login_fail"))
     } finally {
         isLoading.value = false;
