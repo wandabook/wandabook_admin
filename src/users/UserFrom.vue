@@ -16,25 +16,32 @@ const createUserAccount = async () => {
         isLoading.value = true;
         const us = {
             name: `${user.value.first_name ?? ''} ${user.value.last_name}`,
-            phone: user.value.phone,
+            phone: '+237' + user.value.phone,
             email: user.value.email
         }
         const newUser = await createUser(JSON.stringify(us));
-        console.log('newUser', newUser);
-        showAlert('success', t('user_created_sucessfully'));
-        emit('save');
+        if (newUser.responseStatusCode === 200) {
+            const result = JSON.parse(newUser.responseBody);
+            if (result.$id) {
+                console.log('newUser', newUser);
+                showAlert('success', t('user_created_sucessfully'));
+                emit('save');
+                return;
+            }
+        }
+        showAlert('error', t('user_created_Failled'))
         isLoading.value = false;
     } catch (error: any) {
-        showAlert('success', t('user_created_sucessfully'))
+        showAlert('error', t('user_created_Failled'))
         console.log('error', error);
         isLoading.value = false;
     };
 }
 const user = ref({
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone: ''
+    first_name: 's',
+    last_name: 's',
+    email: 's@gmail.com',
+    phone: '650505050'
 });
 const cancel = () => {
     emit('close')

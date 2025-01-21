@@ -15,20 +15,21 @@ const fetchuser = async () => {
         const res = JSON.parse(result.responseBody);
         patrons.value = res.users;
     }
-    console.log(result);
+    console.log(patrons.value);
 }
 onMounted(async () => {
     await fetchuser();
 })
-
-
-
+const autoSizeStrategy = { type: "fitGridWidth", defaultMinWidth: 100, }
 // Column Definitions: Defines the columns to be displayed.
 const colDefs = ref([
     { field: "name", headerName: t('name') },
     { field: "email", headerName: t('email') },
     { field: "phone", headerName: t('phone') },
+    { field: "$createdAt", headerName: t('createdAt') },
     { field: "accessedAt", headerName: t('accessedAt') },
+    { field: "labels", headerName: t('label') },
+
 ]);
 const onClose = () => {
     isCreation.value = false;
@@ -51,7 +52,8 @@ const onSave = async () => {
                 </button></div>
         </div>
         <div class="p-6 bg-white rounded">
-            <ag-grid-vue :rowData="patrons" :columnDefs="colDefs" style="height: 400px" class="ag-theme-quartz">
+            <ag-grid-vue :rowData="patrons" :autoSizeStrategy="autoSizeStrategy" :columnDefs="colDefs"
+                style="height: 400px" class="ag-theme-quartz">
             </ag-grid-vue>
         </div>
         <template v-if="isCreation">

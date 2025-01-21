@@ -125,5 +125,8 @@
   "renew": "Renew",
   "change_subscription_plan": "Change Plan",
   "find": "Find us at maison dams - Yaounde",
-  "created_by": "Created By"
+  "created_by": "Created By",
+  "label": "Label",
+  "user_created_sucessfully": "User account has been created successfully!",
+  "user_created_Failled": "Failed to create the user account. Please try again."
 }
