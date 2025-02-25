@@ -289,18 +289,18 @@ const onSelectSubscription = (tier: any) => {
     isCreation.value = true;
     selectedSubscription.value = tier;
 }
-const confirm_pass = ref('password1234');
+const confirm_pass = ref('');
 const end_user = ref('Yes')
 const user = ref({
-    first_name: 'Tchio',
-    last_name: 'Styves',
-    email: 'styvesdaudet@gmail.com',
+    first_name: '',
+    last_name: '',
+    email: '',
     notification_email: '',
-    password: 'password1234',
-    phone: "650601933",
-    address1: "Message",
-    city: 'Yaounde',
-    cni: "111112",
+    password: '',
+    phone: "",
+    address1: "",
+    city: '',
+    cni: "",
     patron_id: "",
     tags: "",
 

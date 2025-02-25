@@ -128,5 +128,10 @@
   "renew": "Renouveler",
   "change_subscription_plan": "Changer de forfait",
   "find": "Retrouvez-nous à Maison Dams - Yaoundé",
-  "created_by": "Créé par"
+  "created_by": "Créé par",
+  "catalogues": "Catalogues",
+  "add_catalogue": "Ajouter un catalogue",
+  "edit_catalogue": "Modifier le catalogue",
+  "new_catalogue": "Nouveau catalogue",
+  "save_catalogue": "Enregistrer le catalogue"
 }

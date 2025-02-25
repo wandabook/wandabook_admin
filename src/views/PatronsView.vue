@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getDocuments, getDocumentsFreeze } from '../lib/appwrite';
+import { getDocuments } from '../lib/appwrite';
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
 import { useI18n } from "vue-i18n";
-import Pagination from '../components/Pagination.vue';
 const { t } = useI18n({ useScope: "global" });
 
 const patrons = ref<any>([]);

@@ -128,5 +128,10 @@
   "created_by": "Created By",
   "label": "Label",
   "user_created_sucessfully": "User account has been created successfully!",
-  "user_created_Failled": "Failed to create the user account. Please try again."
+  "user_created_Failled": "Failed to create the user account. Please try again.",
+  "catalogues": "Catalogues",
+  "add_catalogue": "Add catalogue",
+  "edit_catalogue": "Edit catalogue",
+  "new_catalogue": "New catalogue",
+  "save_catalogue": "Save catalogue"
 }
