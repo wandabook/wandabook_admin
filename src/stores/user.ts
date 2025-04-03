@@ -8,6 +8,15 @@ export const useUserStore = defineStore('user_wandabook', {
     }),
     getters: {
         isLoggedIn: (state) => !!state.user, // Determine if user is logged in
+        isAdmin: (state) => {
+            if (state.user) {
+                const us = JSON.parse(state.user);
+                if (us.labels && us.labels.includes('admin')) {
+                    return true;
+                }
+            }
+            return false
+        },
         getUser: (state) => state.user
     },
     actions: {

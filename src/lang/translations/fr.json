@@ -133,5 +133,9 @@
   "add_catalogue": "Ajouter un catalogue",
   "edit_catalogue": "Modifier le catalogue",
   "new_catalogue": "Nouveau catalogue",
-  "save_catalogue": "Enregistrer le catalogue"
+  "save_catalogue": "Enregistrer le catalogue",
+  "member": "Membre",
+  "delete_user": "Supprimer l'utilisateur",
+  "update_user": "Mettre à jour l'utilisateur",
+  "delete_user_message": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible."
 }

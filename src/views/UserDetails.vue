@@ -41,8 +41,9 @@
             </div>
         </div>
 
+
         <!-- Actions Section -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6" v-if="store.isAdmin">
             <h2 class="text-2xl font-semibold mb-4">Actions</h2>
             <div class="flex space-x-4">
 
@@ -69,7 +70,7 @@ import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
 import router from "../router";
 import { deleteUser, getActivities, getSingleDocuments, getUserId, updateUser } from "../lib/appwrite";
 import Spinner from "../components/Utilities/Spinner.vue";
-import showAlert from "../helpers/alert";
+import { useUserStore } from '@/stores/user';
 import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 const { documentId } = router.currentRoute.value.params;
@@ -77,7 +78,7 @@ const { documentId } = router.currentRoute.value.params;
 const patron = ref();
 const showPopup = ref(false);
 const isDeleting = ref(false);
-const isFreezing = ref(false);
+const store = useUserStore();
 const popupTitle = ref("");
 const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);

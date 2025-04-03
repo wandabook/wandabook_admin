@@ -6,7 +6,10 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
 import { useI18n } from "vue-i18n";
 import UserFrom from '@/users/UserFrom.vue';
+import { useUserStore } from '@/stores/user';
+
 const { t } = useI18n({ useScope: "global" });
+const store = useUserStore();
 const patrons = ref();
 const isCreation = ref(false);
 const fetchuser = async () => {
@@ -49,7 +52,7 @@ const onCellClicked = (e: any) => {
             <div>
                 <h1 class="text-5xl font-extrabold mb-10">{{ $t('users') }}</h1>
             </div>
-            <div class="justify-center self-center align-middle"><button @click="isCreation = true"
+            <div class="justify-center self-center align-middle" v-if="store.isAdmin"><button @click="isCreation = true"
                     class="  px-4 py-2  bg-blue-500  text-sm rounded-md text-white  hover:bg-blue-600">
                     + {{ $t('create_user') }}
                 </button></div>
