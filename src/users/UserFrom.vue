@@ -4,14 +4,10 @@ import WInput from '../components/ui/WInput.vue';
 import { createUser } from '../lib/appwrite';
 import showAlert from '../helpers/alert';
 import { useI18n } from "vue-i18n";
-import { Result } from 'postcss';
 const { t } = useI18n({ useScope: "global" });
-const isCreation = ref(false);
 const emit = defineEmits(['close', 'save'])
-const isSuccess = ref(false);
 const errorMessage = ref("");
 const isLoading = ref();
-const subscriptions = ref();
 const createUserAccount = async () => {
     try {
         isLoading.value = true;
