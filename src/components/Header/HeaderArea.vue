@@ -18,7 +18,7 @@ const currentRoute = router.currentRoute;
     <div class="flex flex-grow items-center justify-between py-4 px-4 md:px-6 2xl:px-11">
 
       <!-- Mobile menu start -->
-      <div class="flex items-center justify-end gap-2 sm:gap-4 lg:hidden">
+      <div class="flex items-center justify-end gap-2 sm:gap- lg:hidden ">
         <!-- Hamburger Toggle BTN -->
         <button
           class="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
@@ -56,7 +56,7 @@ const currentRoute = router.currentRoute;
       <!-- search bar -->
       <div class="flex items-center p-2 bg-white h-14 w-full px-5 justify-between z-50">
         <div class="flex gap-7 ">
-          <div class="self-center">
+          <div class="self-center hidden md:flex">
             <span v-for="(tab, i) in currentRoute.path.split('/')">
               {{ tab.toLocaleUpperCase() }} <span v-if="i != 0 && i < (currentRoute.path.split('/').length - 1)"> >
               </span>

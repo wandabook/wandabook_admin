@@ -3,7 +3,10 @@
         <!-- Profile Button -->
         <button @click="toggleDropdown" class="flex items-center space-x-2 hover:bg-gray-200 px-4 py-2 rounded-full">
             <img :src="user.avatar" alt="User Avatar" class="w-8 h-8 rounded-full" />
-            <span class="text-sm font-medium text-gray-700">{{ user.name ?? user.email }}</span>
+            <span class="text-sm font-medium  md:text-gray-700 md:flex hidden">{{ user.name ?? user.email
+                }}</span>
+            <span class="text-sm font-medium text-white  md:hidden">{{ user.name ?? user.email
+                }}</span>
         </button>
 
         <!-- Dropdown Menu -->

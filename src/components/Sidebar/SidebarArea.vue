@@ -5,6 +5,7 @@ import { useSidebarStore } from '@/stores/sidebar'
 import SidebarItem from '../Sidebar/SidebarItem.vue';
 
 import { useI18n } from "vue-i18n";
+import ProfileAvatar from '../profile/ProfileAvatar.vue';
 const { t } = useI18n({ useScope: "global" });
 const target = ref(null)
 const sidebarStore = useSidebarStore();
@@ -154,6 +155,11 @@ const menuGroups = ref([
           </ul>
         </div>
       </template>
+      <div class="right flex">
+        <div class="md:hidden sm:inline">
+          <ProfileAvatar />
+        </div>
+      </div>
     </nav>
     <!-- Sidebar Menu -->
   </aside>

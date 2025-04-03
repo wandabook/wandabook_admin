@@ -15,7 +15,7 @@
         <!-- Create/Edit Modal -->
         <div v-if="isModalOpen"
             class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-99 shadow-lg">
-            <div class="bg-white p-6 rounded-lg w-1/3">
+            <div class="bg-white p-6 rounded-lg md:w-1/3">
                 <h2 class="text-xl mb-4" v-if="isEditing">{{ $t('edit_book') }}</h2>
                 <h2 class="text-xl mb-4" v-else>{{ $t('new_book') }}</h2>
                 <form @submit.prevent="saveBook">

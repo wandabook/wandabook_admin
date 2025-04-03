@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-900 min-h-screen p-6">
+    <div class="bg-gray-900 min-h-screen md:p-6 p-1">
         <!-- Header -->
         <div class="text-3xl font-bold mb-6">{{ $t('settings') }}</div>
 
