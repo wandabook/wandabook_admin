@@ -11,14 +11,9 @@
             class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
             <ul>
                 <li>
-                    <a :href="`/members/${user.user_id}/info`" @click="viewProfile"
+                    <a :href="`/members/${user.$id}/info`" @click="viewProfile"
                         class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
                         {{ $t('viewProfile') }}
-                    </a>
-                </li>
-                <li>
-                    <a href="#" @click="openSettings" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                        {{ $t('settings') }}
                     </a>
                 </li>
                 <li>
@@ -46,17 +41,10 @@ const toggleDropdown = () => {
 
 const viewProfile = () => {
     dropdownOpen.value = false;
-    console.log('View Profile clicked');
-};
-
-const openSettings = () => {
-    dropdownOpen.value = false;
-    console.log('Settings clicked');
 };
 
 const logoutUse = async () => {
     dropdownOpen.value = false;
-    console.log('Logout clicked');
     await logout();
     userStore.logout();
     location.reload();
@@ -64,7 +52,7 @@ const logoutUse = async () => {
 
 onMounted(() => {
     if (userStore.getUser) {
-        user.value = { ...JSON.parse(userStore.getUser), avatar: "https://via.placeholder.com/150" }
+        user.value = { ...JSON.parse(userStore.getUser), avatar: "https://img.freepik.com/free-vector/hand-drawn-flat-design-stack-books-illustration_23-2149341898.jpg" }
     }
 })
 </script>

@@ -38,6 +38,9 @@ const onSave = async () => {
     isCreation.value = false;
     await fetchuser();
 }
+const onCellClicked = (e: any) => {
+    window.location.href = '/members/' + e.data.$id + '/info';
+}
 </script>
 
 <template>
@@ -53,7 +56,7 @@ const onSave = async () => {
         </div>
         <div class="p-6 bg-white rounded">
             <ag-grid-vue :rowData="patrons" :autoSizeStrategy="autoSizeStrategy" :columnDefs="colDefs"
-                style="height: 400px" class="ag-theme-quartz">
+                style="height: 400px" class="ag-theme-quartz" @row-clicked="onCellClicked">
             </ag-grid-vue>
         </div>
         <template v-if="isCreation">

@@ -46,6 +46,11 @@ const router = createRouter({
       name: 'suggestions',
       component: () => import('@/views/suggestion/SuggestionView.vue')
     },
+    {
+      path: '/members/:documentId/info',
+      name: 'members',
+      component: () => import('@/views/UserDetails.vue')
+    },
   ]
 })
 
