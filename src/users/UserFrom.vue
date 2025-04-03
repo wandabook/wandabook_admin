@@ -4,6 +4,7 @@ import WInput from '../components/ui/WInput.vue';
 import { createUser } from '../lib/appwrite';
 import showAlert from '../helpers/alert';
 import { useI18n } from "vue-i18n";
+import { Result } from 'postcss';
 const { t } = useI18n({ useScope: "global" });
 const isCreation = ref(false);
 const emit = defineEmits(['close', 'save'])
@@ -16,7 +17,7 @@ const createUserAccount = async () => {
         isLoading.value = true;
         const us = {
             name: `${user.value.first_name ?? ''} ${user.value.last_name}`,
-            phone: '+237' + user.value.phone,
+            phone: user.value.phone,
             email: user.value.email
         }
         const newUser = await createUser(JSON.stringify(us));
@@ -30,6 +31,7 @@ const createUserAccount = async () => {
             }
         }
         showAlert('error', t('user_created_Failled'))
+        console.log('result', newUser)
         isLoading.value = false;
     } catch (error: any) {
         showAlert('error', t('user_created_Failled'))
@@ -38,10 +40,10 @@ const createUserAccount = async () => {
     };
 }
 const user = ref({
-    first_name: 's',
-    last_name: 's',
-    email: 's@gmail.com',
-    phone: '650505050'
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: ''
 });
 const cancel = () => {
     emit('close')
