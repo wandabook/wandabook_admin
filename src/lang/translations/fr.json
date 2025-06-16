@@ -152,5 +152,9 @@
   "subscriptionPlan": "Formule d’abonnement",
   "Confirm": "Confirmer",
   "Cancel": "Annuler",
-  "Activity Logs": "Historique des activités"
+  "Activity Logs": "Historique des activités",
+  "selected": "Sélectionné",
+  "select": "Sélectionner",
+  "Change": "Modifier",
+  "change_subscription": "Modifier l’abonnement"
 }
