@@ -71,7 +71,13 @@
                 </button>
                 <button @click="renewSubscription"
                     class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-white">
+                    <Spinner v-if="isRenew" />
                     {{ $t('renew_subscription') }}
+                </button>
+                <button @click="changeSubsciption"
+                    class="px-4 py-2 bg-yellow-950 hover:bg-yellow-800 rounded-md text-white">
+                    <Spinner v-if="isRenew" />
+                    {{ $t('change_subscription') }}
                 </button>
                 <button @click="deletePatron" class="px-4 py-2 bg-red hover:bg-red-800 rounded-md text-white flex">
                     <Spinner v-if="isDeleting" />
@@ -80,47 +86,95 @@
             </div>
         </div>
 
-        <!-- Patron Activity Logs 
+        <!-- Patron Activity Logs -->
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Activity Logs</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ $t('Activity Logs') }}</h2>
             <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="logColumnDefs" :rowData="activityLogs"
                 :pagination="true" :paginationPageSize="10"></ag-grid-vue>
-        </div>-->
+        </div>
     </div>
     <confirmation-popup v-if="showPopup" :title="popupTitle" :message="popupMessage" :onConfirm="confirmAction"
-        :onCancel="cancelAction" />
+        :onCancel="cancelAction">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4" v-if="show">
+            <p class="font-bold">{{ $t('payment.cash_notice_title') }}</p>
+            <p>{{ $t('payment.cash_notice_body') }}</p>
+        </div>
+    </confirmation-popup>
+    <UpdatSubscription :patron="patron" @cancel="closeModal" @refresh="refreshPage" v-if="isChanging">
+    </UpdatSubscription>
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
 import { AgGridVue } from "ag-grid-vue3";
 import router from "../router";
-import { deleteUser, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
+import { createActivitiesLogs, deleteUser, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
 import Spinner from "../components/Utilities/Spinner.vue";
 import showAlert from "../helpers/alert";
 import { useI18n } from "vue-i18n";
+import { generateCashPaymentLog } from "../components/Utilities/UtilitiesFunction";
+import { useUserStore } from "../stores/user";
 const { t } = useI18n({ useScope: "global" });
+import UpdatSubscription from "../components/patron/UpdatSubscription.vue";
 const { documentId } = router.currentRoute.value.params;
 
 const patron = ref();
 const showPopup = ref(false);
 const isDeleting = ref(false);
 const isFreezing = ref(false);
+const isRenew = ref(false);
+const isChanging = ref(false);
 const popupTitle = ref("");
+const action = ref<string>('');
 const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);
 // Sample activity logs
 const activityLogs = ref();
-
+const userStore = useUserStore();
+const show = computed(() => {
+    console.log('action.value', action.value)
+    console.log(action.value === 'renew')
+    return (action.value.toLocaleLowerCase() === 'renew')
+})
+const employ = computed(() => {
+    return { ...JSON.parse(userStore.getUser) }
+});
 const logColumnDefs = [
     {
-        field: "$createdAt", headerName: "Date", flex: 1
+        field: "$createdAt",
+        headerName: t("Date"),
+        flex: 1,
+        valueFormatter: ({ value }: { value: string }) => {
+            if (!value) return "";
+            const date = new Date(value);
+            return new Intl.DateTimeFormat("fr-FR", {
+                dateStyle: "short",
+                timeStyle: "short",
+            }).format(date);
+        },
     },
-    { field: "log", headerName: "Activity", flex: 2 },
+    {
+        field: "log",
+        headerName: t("Activity"),
+        flex: 2,
+        wrapText: true,
+        autoHeight: true,
+    },
+    {
+        field: "paymentMethod",
+        headerName: t("paymentMethod"),
+        flex: 1,
+    },
+    {
+        field: "subscriptionPlan.title",
+        headerName: t("subscriptionPlan"),
+        flex: 1,
+    },
 ];
+
 
 // Methods
 const goBack = () => {
@@ -162,13 +216,46 @@ const deletePatron = () => {
 };
 
 const renewSubscription = () => {
+    action.value = 'renew'
     popupTitle.value = t('renew_subscription');
     popupMessage.value = t('renew_subscription_messsage');
-    actionToConfirm.value = () => {
+    actionToConfirm.value = async () => {
+
+        // Get the current date
+        const now = new Date();
+
+        // Now + 1 month
+        const oneMonthLater = new Date(now);
+        oneMonthLater.setMonth(now.getMonth() + 1);
+
+        // Now + 1 year
+        const oneYearLater = new Date(now);
+        isRenew.value = true;
+        await updateUser({
+            patron_id: patron.value.patron_id,
+            tags: patron.value.tags,
+            barcode: patron.value.barcode,
+            freeze: false,
+            subscriptionPlan: patron.value.subscriptionPlan.$id,
+            lastSubcriptionDate: new Date(now),
+            endSubscriptionDate: patron.value.isAnnual.value ? oneYearLater : oneMonthLater,
+            readCondition: true,
+        }, patron.value.$id);
+        const amount = patron.value.isAnnual.value ? patron.value.subscriptionPlan.yearly_amount : patron.value.subscriptionPlan.monthly_amount;
+        const activityLogObjsc = {
+            patrons: patron.value.$id,
+            subscriptionPlan: patron.value.subscriptionPlan.$id,
+            paymentMethod: 'cash',
+            log: generateCashPaymentLog(`${patron.value.first_name ?? ''} ${patron.value.last_name ?? ''}`, amount, employ.value.name ?? employ.value.email, true)
+        }
+        const activityLog = await createActivitiesLogs(activityLogObjsc);
+        refresh();
+        isRenew.value = false;
+        action.value = "";
         showAlert('success', t('renew_succes'));
-        // Add renewal logic here
     };
     showPopup.value = true;
+
 };
 
 const confirmAction = () => {
@@ -192,8 +279,22 @@ const getActivitiesLog = async () => {
     }
     console.log(activityLogs);
 }
-getDocument();
-getActivitiesLog()
+const refresh = () => {
+    getDocument();
+    getActivitiesLog()
+}
+const changeSubsciption = () => {
+    isChanging.value = true;
+}
+const closeModal = () => {
+    isChanging.value = false;
+}
+const refreshPage = () => {
+    isChanging.value = false;
+    showAlert('success', t('renew_succes'));
+    refresh();
+}
+refresh()
 </script>
 
 <style scoped>
@@ -201,5 +302,13 @@ getActivitiesLog()
 .ag-theme-alpine-dark {
     --ag-header-background-color: #1f2937;
     --ag-row-hover-color: #374151;
+}
+
+.log-cell-wrap {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.4;
+    white-space: normal;
 }
 </style>

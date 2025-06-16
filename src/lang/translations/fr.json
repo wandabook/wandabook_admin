@@ -137,5 +137,20 @@
   "member": "Membre",
   "delete_user": "Supprimer l'utilisateur",
   "update_user": "Mettre à jour l'utilisateur",
-  "delete_user_message": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible."
+  "delete_user_message": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.",
+  "form": {
+    "cni": "National ID Number",
+    "cni_placeholder": "e.g. C2456789012",
+    "cni_invalid": "Invalid format. Example: 101234567 or C2456789012"
+  },
+  "payment": {
+    "cash_notice_title": "Paiement en espèce",
+    "cash_notice_body": "⚠️ Ce paiement a été effectué en espèce. Veuillez vous assurer que le montant a bien été reçu physiquement par la caissière avant de valider cette opération."
+  },
+  "Activity": "Activité",
+  "paymentMethod": "Méthode de paiement",
+  "subscriptionPlan": "Formule d’abonnement",
+  "Confirm": "Confirmer",
+  "Cancel": "Annuler",
+  "Activity Logs": "Historique des activités"
 }

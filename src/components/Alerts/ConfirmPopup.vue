@@ -3,12 +3,13 @@
         <div class="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 class="text-lg font-semibold mb-4">{{ title }}</h2>
             <p class="mb-6">{{ message }}</p>
+            <slot></slot>
             <div class="flex justify-end space-x-4">
-                <button @click="cancel" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600">
-                    Cancel
+                <button @click="cancel" class="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600 ">
+                    {{ $t('Cancel') }}
                 </button>
-                <button @click="confirm" class="px-4 py-2 bg-red-600 rounded-md hover:bg-red-700">
-                    Confirm
+                <button @click="confirm" class="px-4 py-2 bg-red text-white rounded-md hover:bg-red-700">
+                    {{ $t('Confirm') }}
                 </button>
             </div>
         </div>

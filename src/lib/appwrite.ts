@@ -5,7 +5,7 @@ export const client = new Client();
 const databases = new Databases(client);
 client
     .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('671629940021dc2b8ecb'); // Replace with your project ID
+    .setProject('671629940021dc2b8ecb'); // Replace with your pro\ject ID
 
 export const account = new Account(client);
 const databaseId = '671bb8f9000c6e9bf6a0';
@@ -176,6 +176,14 @@ export const createNewUser = async (data: any) => {
     );
 }
 
+export const createActivitiesLogs = async (data: any) => {
+    return databases.createDocument(
+        import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID,
+        import.meta.env.VITE_APP_ACTIVITY_COLLECTION_ID,
+        ID.unique(),
+        data
+    );
+}
 
 export const getDocumentsWithFilerGlobal = async (collectionId: string, filters: string[]) => {
     return await databases.listDocuments(

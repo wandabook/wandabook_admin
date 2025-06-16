@@ -49,8 +49,8 @@
                             }}</span>
                             <span :class="['text-gray-500', 'md:text-base  text-sm']">/{{ $t('month') }}</span>
                         </p>
-                        <p :class="['text-gray-600', 'md:mt-6 mt-2 md:text-base text-sm leading-7']">{{
-                            tier.description }}</p>
+                        <!--  <p :class="['text-gray-600', 'md:mt-6 mt-2 md:text-base text-sm leading-7']">{{
+                            tier.description }}</p> -->
                         <a :aria-describedby="tier.id" @click="onSelectSubscription(tier)"
                             :class="['bg-brand-default text-white shadow-sm hover:bg-brand-default/80', 'mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10']">
                             {{ $t('subscribeNow') }}
@@ -113,115 +113,103 @@
         </div>
     </section>
 
-    <div class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true" v-if="isCreation">
+    <div v-if="isCreation" class="fixed inset-0 z-999 flex items-center justify-center bg-black/25">
+        <!-- Overlay sombre en arrière-plan -->
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div
-                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-7 sm:w-full sm:max-w-lg">
-                    <form @submit.prevent="createUserAccount">
-                        <div class="bg-white px-4 sm:p-6 sm:pb-2">
-                            <div class="sm:flex sm:items-start">
-                                <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                    <h3 class="text-base font-heading leading-6 text-gray-900 mb-5" id="modal-title">{{
-                                        $t('createAccount') }}</h3>
-                                    <div class="mt-3" v-if="errorMessage">
-                                        <div class="text-red">
-                                            {{ errorMessage }}
-                                        </div>
-                                    </div>
-                                    <div class="mt-1">
-                                        <div class="mb-1 rounded-lg px-0 text-left">
-                                            <div class="flex justify-between flex-wrap">
-                                                <div class="mb-2  w-5/12"><label class="mb-2 block text-sm font-bold"
-                                                        for="firstname">{{
-                                                            $t('firstName') }}</label>
-                                                    <WInput :required="true" id="firstname" v-model="user.first_name" />
-                                                </div>
-                                                <div class="mb-2 w-6/12"><label class="mb-2 block text-sm font-bold"
-                                                        for="lastname">{{
-                                                            $t('lastName') }}</label>
-                                                    <WInput :required="true" id="lastname" v-model="user.last_name" />
-                                                </div>
-                                            </div>
-                                            <div class="mb-2"><label class=" mb-2 block text-sm font-bold"
-                                                    for="email">{{ $t('email') }}</label>
-                                                <WInput type="email" :required="true" id="email" v-model="user.email" />
-                                            </div>
-                                            <div class="mb-2"><label class=" mb-2 block text-sm font-bold"
-                                                    for="phone">{{ $t('phone') }}</label>
-                                                <WInput type="text" :required="true" id="phone" v-model="user.phone" />
-                                            </div>
-                                            <div class="mb-2"><label class=" mb-2 block text-sm font-bold"
-                                                    for="address">{{ $t('address') }}</label>
-                                                <WInput type="text" :required="true" id="address"
-                                                    v-model="user.address1" />
-                                            </div>
-                                            <div class="mb-2"><label class=" mb-2 block text-sm font-bold" for="cni">{{
-                                                $t('cni') }}</label>
-                                                <WInput type="text" :required="true" id="cni" v-model="user.cni" />
-                                            </div>
-                                            <!--
-                                            <div class="mb-2" v-if="end_user === 'Yes'"><label
-                                                    class="mb-2 block text-sm font-bold" for="password">{{
-                                                        $t('password') }}</label>
-                                                <WInput type="password" :required="true"
-                                                    placeholder="******************" id="password"
-                                                    v-model="user.password" />
-                                            </div>
-                                            <div class="mb-2" v-if="end_user === 'Yes'"><label
-                                                    class="mb-2 block text-sm font-bold" for="confirm_password">{{
-                                                        $t('confirmPassword') }}</label>
-                                                <WInput type="password" :required="true"
-                                                    placeholder="******************" v-model="confirm_pass"
-                                                    id="confirm_password" />
-                                            </div>
--->
-                                            <div class="mb-6">
-                                                <label class="mb-2 flex text-sm"><input type="checkbox" name="accept"
-                                                        class="mr-2" :required="true" />
-                                                    <div class="text-gray-800">
-                                                        <p class="">
-                                                            {{ $t('acceptT') }}
-                                                            <a href="#"
-                                                                class="cursor-pointer text-blue-500 underline">{{
-                                                                    $t('termsOfUse') }}</a>
-                                                            {{ $t('and') }}
-                                                            <a href="#" class="cursor-pointer text-blue-500 underline">
-                                                                {{ $t('privacy') }}</a>
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- Conteneur de la modale -->
+        <div class="relative z-50 w-full max-w-lg mx-auto overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:my-8"
+            role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <form @submit.prevent="createUserAccount">
+                <!-- Contenu principal -->
+                <div class="bg-white px-6 py-4">
+                    <h3 class="text-title-md font-heading text-gray-900 mb-5" id="modal-title">
+                        {{ $t('createAccount') }}
+                    </h3>
+
+                    <!-- Message d'erreur -->
+                    <div v-if="errorMessage" class="text-red mb-3">
+                        {{ errorMessage }}
+                    </div>
+
+                    <!-- Form fields -->
+                    <div class="space-y-3">
+                        <div class="flex gap-4">
+                            <div class="w-1/2">
+                                <label for="firstname" class="block text-sm font-bold mb-1">{{ $t('firstName')
+                                    }}</label>
+                                <WInput id="firstname" v-model="user.first_name" :required="true" />
+                            </div>
+                            <div class="w-1/2">
+                                <label for="lastname" class="block text-sm font-bold mb-1">{{ $t('lastName') }}</label>
+                                <WInput id="lastname" v-model="user.last_name" :required="true" />
                             </div>
                         </div>
-                        <div class="md:bg-gray-50 px-4 py-3 flex flex-row sm:px-6 justify-between w-full">
-                            <button type="button" @click="isCreation = false"
-                                class="mt-2 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
-                                {{ $t('cancel') }}</button>
-                            <button type="submit"
-                                class=" justify-center rounded-md bg-brand-default px-3 py- text-sm font-semibold text-white shadow-sm hover:bg-red sm:ml-3 sm:w-auto">
-                                <svg aria-hidden="true" role="status" v-if="isLoading"
-                                    class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101"
-                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                        fill="#E5E7EB" />
-                                    <path
-                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                        fill="currentColor" />
-                                </svg>
-                                {{ $t('createAccount') }}</button>
+
+                        <div>
+                            <label for="email" class="block text-sm font-bold mb-1">{{ $t('email') }}</label>
+                            <WInput id="email" v-model="user.email" type="email" :required="true" />
                         </div>
-                    </form>
+
+                        <div>
+                            <label for="phone" class="block text-sm font-bold mb-1">{{ $t('phone') }}</label>
+                            <PhoneInput id="phone" v-model="user.phone" :required="true" />
+                        </div>
+
+                        <div>
+                            <label for="address" class="block text-sm font-bold mb-1">{{ $t('address') }}</label>
+                            <WInput id="address" v-model="user.address1" type="text" :required="true" />
+                        </div>
+
+                        <div>
+                            <WInputCNI id="cni" v-model="user.cni" :required="true" />
+                        </div>
+
+                        <!-- Conditions -->
+                        <div class="mt-4">
+                            <label class="flex text-sm">
+                                <input type="checkbox" class="mr-2" required />
+                                <span class="text-gray-800">
+                                    {{ $t('acceptT') }}
+                                    <a href="#" class="text-blue-500 underline">{{ $t('termsOfUse') }}</a>
+                                    {{ $t('and') }}
+                                    <a href="#" class="text-blue-500 underline">{{ $t('privacy') }}</a>
+                                </span>
+                            </label>
+                        </div>
+                        <div v-if="paymentMethod === 'cash'"
+                            class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4">
+                            <p class="font-bold">{{ $t('payment.cash_notice_title') }}</p>
+                            <p>{{ $t('payment.cash_notice_body') }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Boutons -->
+                <div class="bg-gray-50 px-6 py-4 flex justify-between">
+                    <button type="button" @click="isCreation = false"
+                        class="inline-flex justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
+                        {{ $t('cancel') }}
+                    </button>
+                    <button type="submit"
+                        class="inline-flex items-center justify-center rounded-md bg-brand-default px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red">
+                        <svg aria-hidden="true" role="status" v-if="isLoading"
+                            class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="#E5E7EB" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        {{ $t('createAccount') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+
 </template>
 <script setup lang="ts" type="module">
 import { computed, onMounted, ref } from 'vue';
@@ -230,7 +218,7 @@ const isAnnual = ref(false);
 const isCreation = ref(false);
 const isSuccess = ref(false);
 const errorMessage = ref("");
-
+const paymentMethod = ref('cash')
 const subscriptions = ref();
 
 const fetchSubscriptions = async () => {
@@ -245,10 +233,17 @@ const fetchSubscriptions = async () => {
 
 const selectedSubscription = ref();
 import WInput from '@/components/ui/WInput.vue';
-import { addNewUser, createNewUser, getDocumentsGlobal, getDocumentsWithFilerGlobal } from '@/lib/appwrite';
+import { addNewUser, createActivitiesLogs, createNewUser, getDocumentsGlobal, getDocumentsWithFilerGlobal } from '@/lib/appwrite';
 import { subscriptionCollection } from '@/components/Utilities/constants';
 import { Query } from 'appwrite';
 import { useUserStore } from '@/stores/user';
+import PhoneInput from '../Forms/PhoneInput.vue';
+import WInputCNI from '../Forms/WInputCNI.vue';
+import { generateCashPaymentLog } from '../Utilities/UtilitiesFunction';
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const userStore = useUserStore();
 
 const redirectToLogin = (id: string) => {
@@ -337,12 +332,20 @@ const createWandaUser = async (barcode: any) => {
     };
     try {
         const userResult = await createNewUser(userRecord);
+        const amount = isAnnual.value ? selectedSubscription.value.yearly_amount : selectedSubscription.value.monthly_amount;
+        const activityLogObjsc = {
+            patrons: userResult.$id,
+            subscriptionPlan: selectedSubscription.value.$id,
+            paymentMethod: paymentMethod.value,
+            log: generateCashPaymentLog(`${userRecord.first_name ?? ''} ${userRecord.last_name ?? ''}`, amount, user.value.last_name, false)
+        }
+        const activityLog = await createActivitiesLogs(activityLogObjsc);
         isCreation.value = false;
         isSuccess.value = true;
         redirectToLogin(userResult.$id);
     } catch (e) {
         console.log("error", e);
-        errorMessage.value = 'errorOccur'
+        errorMessage.value = t('errorOccur')
     }
 }
 onMounted(() => {

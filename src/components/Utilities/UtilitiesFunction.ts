@@ -11,3 +11,21 @@ export async function handleResponse<T>(response: Response): Promise<{ jsonRespo
         throw new Error(`Error parsing response: ${errorMessage}`);
     }
 }
+
+
+
+export const generateCashPaymentLog = (
+    userName: string,
+    amount: number,
+    agent: string,
+    isRenewal: boolean,
+    date = new Date()
+) => {
+    const type = isRenewal ? 'Réabonnement' : 'Nouvelle souscription'
+    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+    }).format(date)
+
+    return `[Paiement en espèce] - ${type} pour ${userName}.\nMontant reçu : ${amount.toLocaleString()} FCFA.\nOpérateur : ${agent}.\nDate : ${formattedDate}.`
+}

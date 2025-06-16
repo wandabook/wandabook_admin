@@ -137,5 +137,24 @@
   "member": "Member",
   "delete_user": "Delete user",
   "update_user": "Update user",
-  "delete_user_message": "Are you sure you want to delete this user? This action cannot be undone."
+  "delete_user_message": "Are you sure you want to delete this user? This action cannot be undone.",
+  "form": {
+    "cni": "Numéro de CNI",
+    "cni_placeholder": "Ex: C2456789012",
+    "cni_invalid": "Format invalide. Exemple : 101234567 ou C2456789012"
+  },
+  "payment": {
+    "cash_notice_title": "Cash Payment",
+    "cash_notice_body": "⚠️ This payment was made in cash. Please ensure the amount has been physically received by the cashier before validating this transaction."
+  },
+  "Activity": "Activity",
+  "paymentMethod": "Payment Method",
+  "subscriptionPlan": "Subscription Plan",
+  "Confirm": "Confirm",
+  "Cancel": "Cancel",
+  "Activity Logs": "Activity Logs",
+  "selected": "Selected",
+  "select": "Select",
+  "Change": "Change",
+  "change_subscription": "Change Subscription"
 }
