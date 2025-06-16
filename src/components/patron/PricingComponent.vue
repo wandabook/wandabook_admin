@@ -137,7 +137,7 @@
                         <div class="flex gap-4">
                             <div class="w-1/2">
                                 <label for="firstname" class="block text-sm font-bold mb-1">{{ $t('firstName')
-                                    }}</label>
+                                }}</label>
                                 <WInput id="firstname" v-model="user.first_name" :required="true" />
                             </div>
                             <div class="w-1/2">
@@ -337,7 +337,7 @@ const createWandaUser = async (barcode: any) => {
             patrons: userResult.$id,
             subscriptionPlan: selectedSubscription.value.$id,
             paymentMethod: paymentMethod.value,
-            log: generateCashPaymentLog(`${userRecord.first_name ?? ''} ${userRecord.last_name ?? ''}`, amount, user.value.last_name, false)
+            log: generateCashPaymentLog(`${userRecord.first_name ?? ''} ${userRecord.last_name ?? ''}`, amount, employ.value.name ?? employ.value.email, false)
         }
         const activityLog = await createActivitiesLogs(activityLogObjsc);
         isCreation.value = false;

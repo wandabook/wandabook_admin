@@ -230,6 +230,7 @@ const renewSubscription = () => {
 
         // Now + 1 year
         const oneYearLater = new Date(now);
+        oneYearLater.setFullYear(now.getFullYear() + 1);
         isRenew.value = true;
         await updateUser({
             patron_id: patron.value.patron_id,

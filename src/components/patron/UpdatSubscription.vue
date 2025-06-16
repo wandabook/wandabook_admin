@@ -169,6 +169,7 @@ const changeSubscriptionPlan = async () => {
 
     // Now + 1 year
     const oneYearLater = new Date(now);
+    oneYearLater.setFullYear(now.getFullYear() + 1);
     isRenew.value = true;
     isLoading.value = true;
     await updateUser({
