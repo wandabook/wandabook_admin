@@ -5,29 +5,29 @@ export const client = new Client();
 const databases = new Databases(client);
 client
     .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('671629940021dc2b8ecb'); // Replace with your pro\ject ID
+    .setProject(import.meta.env.VITE_APP_PROJECT_ID); // Replace with your pro\ject ID
 
 export const account = new Account(client);
-const databaseId = '671bb8f9000c6e9bf6a0';
+const databaseId = import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID;
 export const getDocuments = async () => {
     return await databases.listDocuments(
-        '671bb8f9000c6e9bf6a0',
-        '671bb91d000cd2063080',
+        import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID,
+        import.meta.env.VITE_APP_PATRON_COLLECTION_ID,
         [
         ]
     );
 }
 export const getSingleDocuments = async (documentId: string) => {
     return await databases.getDocument(
-        '671bb8f9000c6e9bf6a0',
-        '671bb91d000cd2063080',
+        import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID,
+        import.meta.env.VITE_APP_PATRON_COLLECTION_ID,
         documentId
     );
 }
 
 export const getActivities = async (documentId: string) => {
     return await databases.listDocuments(
-        '671bb8f9000c6e9bf6a0',
+        import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID,
         '673c47ef003a877f040a',
         [Query.equal('patrons', documentId)]
     );
@@ -42,7 +42,7 @@ export const logout = async () => {
 }
 export const users = async () => {
     const result = await functions.createExecution(
-        '6725080b0013accf3a71', // functionId
+        import.meta.env.VITE_APP_USER_FUNCTION_ID, // functionId
         '', // body (optional)
         false, // async (optional)
         'users', // path (optional)
@@ -53,7 +53,7 @@ export const users = async () => {
 }
 export const getUserId = async (body: string) => {
     const result = await functions.createExecution(
-        '6725080b0013accf3a71', // functionId
+        import.meta.env.VITE_APP_USER_FUNCTION_ID, // functionId
         body, // body (optional)
         false, // async (optional)
         'getUserIds', // path (optional)
@@ -64,7 +64,7 @@ export const getUserId = async (body: string) => {
 }
 export const createUser = async (body: string) => {
     const result = await functions.createExecution(
-        '6725080b0013accf3a71', // functionId
+        import.meta.env.VITE_APP_USER_FUNCTION_ID, // functionId
         body, // body (optional)
         false, // async (optional)
         'users', // path (optional)
@@ -116,7 +116,7 @@ const functions = new Functions(client);
 
 export const deleteUser = async (data: any) => {
     const result = await functions.createExecution(
-        '6724cc3e00047f95c411', // functionId
+        import.meta.env.VITE_APP_ACTIVITY_FUNCTION_ID, // functionId
         JSON.stringify(data), // body (optional)
         false, // async (optional)
         'patron', // path (optional)
@@ -130,7 +130,7 @@ export const deleteUser = async (data: any) => {
 export const updateUser = async (data: any, documentId: string) => {
     const dataJ = { ...data, freeze: data.freeze ? 1 : null }
     const result = await functions.createExecution(
-        '6724cc3e00047f95c411', // functionId
+        import.meta.env.VITE_APP_ACTIVITY_FUNCTION_ID, // functionId
         JSON.stringify(dataJ), // body (optional)
         false, // async (optional)
         'patron', // path (optional)
@@ -143,8 +143,8 @@ export const updateUser = async (data: any, documentId: string) => {
 
 export const getDocumentsFreeze = async () => {
     return await databases.listDocuments(
-        '671bb8f9000c6e9bf6a0',
-        '671bb91d000cd2063080',
+        import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID,
+        import.meta.env.VITE_APP_PATRON_COLLECTION_ID,
         [
             Query.equal('freeze', true)
         ]
@@ -157,7 +157,7 @@ export const getUser = async () => {
 
 export const addNewUser = async (data: any) => {
     const result = await functions.createExecution(
-        '6724cc3e00047f95c411', // functionId
+        import.meta.env.VITE_APP_ACTIVITY_FUNCTION_ID, // functionId
         data, // body (optional)
         false, // async (optional)
         'patron', // path (optional)
@@ -169,8 +169,8 @@ export const addNewUser = async (data: any) => {
 
 export const createNewUser = async (data: any) => {
     return databases.createDocument(
-        '671bb8f9000c6e9bf6a0',
-        '671bb91d000cd2063080',
+        import.meta.env.VITE_APP_ACTIVITY_DATABASE_ID,
+        import.meta.env.VITE_APP_PATRON_COLLECTION_ID,
         ID.unique(),
         data
     );
