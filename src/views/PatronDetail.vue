@@ -222,7 +222,7 @@ const renewSubscription = () => {
     actionToConfirm.value = async () => {
 
         // Get the current date
-        const now = new Date();
+        const now = new Date(patron.value.endSubscriptionDate);
 
         // Now + 1 month
         const oneMonthLater = new Date(now);

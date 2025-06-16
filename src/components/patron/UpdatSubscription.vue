@@ -161,7 +161,7 @@ const onSelectSubscription = (tier: any) => {
 fetchSubscriptions();
 const changeSubscriptionPlan = async () => {
     // Get the current date
-    const now = new Date();
+    const now = new Date(props.patron.endSubscriptionDate);
 
     // Now + 1 month
     const oneMonthLater = new Date(now);
