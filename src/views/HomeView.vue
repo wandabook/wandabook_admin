@@ -8,17 +8,21 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 
 const patrons = ref<any>([]);
+const total_patrons = ref(0);
+const total_freezes = ref(0);
 const freezesPatrons = ref<any>([]);
 
 onMounted(async () => {
     const result = await getDocuments();
     if (result.documents != null && result.documents.length > 0) {
+        total_patrons.value = result.total;
         patrons.value = result.documents.map((e) => {
             return { ...e, subcriptionPlanTitle: e.subscriptionPlan?.title }
         })
     }
     console.log(result); const freezes = await getDocumentsFreeze();
     if (freezes.documents != null && freezes.documents.length > 0) {
+        total_freezes.value = result.total;
         freezesPatrons.value = freezes.documents;
     }
 
@@ -54,7 +58,7 @@ const onCellClicked = (e: any) => {
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
                         <div class="text-xl font-semibold">{{ $t('total_patrons') }}</div>
-                        <div class="text-gray-400 text-sm">{{ patrons.length }}</div>
+                        <div class="text-gray-400 text-sm">{{ total_patrons }}</div>
                     </div>
                     <div class="bg-green-800  p-3 rounded-full">
                     </div>
@@ -62,7 +66,7 @@ const onCellClicked = (e: any) => {
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
                         <div class="text-xl font-semibold">{{ $t('block_user') }}</div>
-                        <div class="text-gray-400 text-sm">{{ freezesPatrons.length }}</div>
+                        <div class="text-gray-400 text-sm">{{ total_freezes }}</div>
                     </div>
                     <div class="bg-red p-3 rounded-full">
                     </div>
