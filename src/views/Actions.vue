@@ -1,11 +1,13 @@
 <template>
     <div class="action-buttons">
-        <button @click="onEdit" data-action="edit">Edit</button>
-        <button @click="onDelete" data-action="delete">Delete</button>
+        <button @click="onEdit" data-action="edit">{{ t('Edit') }}</button>
+        <button @click="onDelete" data-action="delete">{{ t('Delete') }}</button>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
 const emit = defineEmits(['cellButtonClicked', 'delete']);
 const onEdit = () => {
     emit('cellButtonClicked', { edit: true });

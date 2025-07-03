@@ -58,17 +58,18 @@ import sw from '@/assets/images/home/united-kingdom_551844.png'
 import cm from '@/assets/images/home/Flag_of_France.png'
 import { useI18n } from 'vue-i18n'
 import { useLanguageStore } from '@/lang/language'
+const { tm } = useI18n();
 const t = useI18n({ useScope: 'global' })
 
 const languages = [
   {
     code: 'en',
-    name: 'English',
+    name: tm('English'),
     icon: sw,
   },
   {
     code: 'fr',
-    name: 'French',
+    name: tm('French'),
     icon: cm,
   },
 ]

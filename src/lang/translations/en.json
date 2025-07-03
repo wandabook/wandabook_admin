@@ -156,5 +156,10 @@
   "selected": "Selected",
   "select": "Select",
   "Change": "Change",
-  "change_subscription": "Change Subscription"
+  "change_subscription": "Change Subscription",
+  "French": "French",
+  "English": "English",
+  "catalogue": "Catalogue",
+  "Edit": "Edit",
+  "Delete": "Delete"
 }

@@ -14,6 +14,7 @@ const patrons = ref();
 const isCreation = ref(false);
 const fetchuser = async () => {
     const result = await users();
+    console.log(result);
     if (result.status === "completed") {
         const res = JSON.parse(result.responseBody);
         patrons.value = res.users;
