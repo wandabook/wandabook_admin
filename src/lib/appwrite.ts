@@ -16,8 +16,8 @@ export const getDocuments = async () => {
         [
                             Query.orderDesc('$createdAt'), // Ajouté : Ordonne les documents par 'createddate' en ordre décroissant
                             Query.limit(100), // Ajouté : Limite le nombre de documents retournés à 100
-                           Query.isNotNull('barcode'),
-                           Query.notEqual('barcode',"") // Ajouté : Filtre les documents pour ne retourner que ceux avec le statut "active"
+                           //Query.isNotNull('barcode'),
+                           //Query.notEqual('barcode',"") // Ajouté : Filtre les documents pour ne retourner que ceux avec le statut "active"
         ]
     );
 }

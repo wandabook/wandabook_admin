@@ -12,7 +12,7 @@
 
         <!-- Patron Details Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Patron Details</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ $t('patron_details') }}</h2>
             <div class="grid grid-cols-2 gap-6">
                 <div><strong>{{ $t('barcode') }}:</strong> {{ patron.barcode }}</div>
                 <div><strong>{{ $t('first_name') }}:</strong> {{ patron.first_name }}</div>
@@ -83,9 +83,18 @@
                     <Spinner v-if="isDeleting" />
                     {{ $t('delete_patron') }}
                 </button>
+                <button @click="identification" class="px-4 py-2 bg-brand-default hover:bg-red-800 rounded-md text-white flex">
+                    <Spinner v-if="isDeleting" />
+                    {{ $t('identification') }}
+                </button>
             </div>
         </div>
-
+        <!-- patron documents -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-4">{{ $t('Documents') }}</h2>
+            <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDocumentDefs" :rowData="patron.documents"
+                :pagination="true" :paginationPageSize="10" @cellClicked="onCellClicked"></ag-grid-vue>
+        </div>
         <!-- Patron Activity Logs -->
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold mb-4">{{ $t('Activity Logs') }}</h2>
@@ -120,7 +129,6 @@ import { useUserStore } from "../stores/user";
 const { t } = useI18n({ useScope: "global" });
 import UpdatSubscription from "../components/patron/UpdatSubscription.vue";
 const { documentId } = router.currentRoute.value.params;
-
 const patron = ref();
 const showPopup = ref(false);
 const isDeleting = ref(false);
@@ -142,6 +150,30 @@ const show = computed(() => {
 const employ = computed(() => {
     return { ...JSON.parse(userStore.getUser) }
 });
+const colDocumentDefs = [
+    { field: "title", headerName: t("Title"), flex: 1 },
+    {
+        field: "type",
+        headerName: t("Type"),
+        flex: 1,
+        cellRenderer: (params: any) => {
+            return params.value ? `<span class="px-2 py-1">${params.value}</span>` : "";
+        },
+    },
+    {
+        field: "createdAt",
+        headerName: t("Created At"),
+        flex: 1,
+        valueFormatter: ({ value }: { value: string }) => {
+            if (!value) return "";
+            const date = new Date(value);
+            return new Intl.DateTimeFormat("fr-FR", {
+                dateStyle: "short",
+                timeStyle: "short",
+            }).format(date);
+        },
+    },
+];
 const logColumnDefs = [
     {
         field: "$createdAt",
@@ -180,7 +212,12 @@ const logColumnDefs = [
 const goBack = () => {
     window.location.href = '/patrons'
 };
-
+const onCellClicked = (e: any) => {
+    window.location.href = '/documents/' + e.data.$id;
+};
+const identification = () => {
+    window.location.href = '/identification/'+patron.value.$id;
+}
 const toggleFreeze = () => {
     popupTitle.value = patron.value.freeze ? "Unfreeze Patron" : "Freeze Patron";
     popupMessage.value = `Are you sure you want to ${patron.value.freeze ? "unfreeze" : "freeze"

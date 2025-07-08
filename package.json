@@ -24,6 +24,7 @@
     "primevue": "^4.1.1",
     "sweetalert2": "^11.15.10",
     "tailwind-scrollbar-hide": "^1.1.7",
+    "uuidv4": "^6.2.13",
     "vue": "^3.4.29",
     "vue-i18n": "^10.0.5",
     "vue-router": "^4.5.0",
