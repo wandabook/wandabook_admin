@@ -56,7 +56,7 @@
           <!-- Show captured image and action buttons -->
           <div class="mt-6">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ getCapturedImageTitle() }}</h3>
-            <img :src="getCurrentDocumentImage()" :alt="$t('capturedDocumentAlt')"
+            <img :src="getCurrentDocumentImage() as string" :alt="$t('capturedDocumentAlt')"
               class="w-full h-auto rounded-lg shadow-md mb-6 object-contain max-h-96 mx-auto" />
             <div class="flex flex-col md:flex-row gap-4">
               <button @click="reprendreDocumentPhoto"
@@ -148,7 +148,7 @@
               <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $t('documentTypeLabel', {
                 type: $t(documentType)
                 }) }}</h3>
-              <img v-if="getCurrentDocumentImage()" :src="getCurrentDocumentImage()" :alt="$t('capturedDocumentAlt')"
+              <img v-if="getCurrentDocumentImage()" :src="getCurrentDocumentImage() as string" :alt="$t('capturedDocumentAlt')"
                 class="w-full h-auto rounded-lg shadow-md object-contain max-h-64 mx-auto" />
               <p v-else class="text-gray-500">{{ $t('noDocumentCaptured') }}</p>
             </div>
@@ -181,7 +181,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import router from '../router';
@@ -195,10 +195,10 @@ const DOCUMENT_TYPES = {
   PASSPORT: 'passport',
   NATIONAL_ID: 'national_id',
   DRIVING_LICENSE: 'driving_license'
-};
+} as const;
 
 const { t } = useI18n();
-const { documentId } = router.currentRoute.value.params;
+const documentId = router.currentRoute.value.params.documentId;
 const patron = ref();
 
 const showConfirmationModal = ref(false);
@@ -229,22 +229,22 @@ const ConfirmationModal = {
 };
 
 // Refs for DOM elements
-const videoRef = ref(null);
-const canvasRef = ref(null);
-const selfieVideoRef = ref(null);
-const selfieCanvasRef = ref(null);
+const videoRef = ref<HTMLVideoElement | null>(null);
+const canvasRef = ref<HTMLCanvasElement | null>(null);
+const selfieVideoRef = ref<HTMLVideoElement | null>(null);
+const selfieCanvasRef = ref<HTMLCanvasElement | null>(null);
 const isLoading = ref(false);
 // State
-const stream = ref(null);
-const selfieStream = ref(null);
-const documentType = ref('');
-const capturedPassportImage = ref(null);
-const capturedDrivingLicenseImage = ref(null);
-const capturedNationalIdFrontImage = ref(null);
-const capturedNationalIdBackImage = ref(null);
-const capturedSelfieImage = ref(null);
-const step = ref(0);
-const cameraError = ref('');
+const stream = ref<MediaStream | null>(null);
+const selfieStream = ref<MediaStream | null>(null);
+const documentType = ref<string>('');
+const capturedPassportImage = ref<string | null>(null);
+const capturedDrivingLicenseImage = ref<string | null>(null);
+const capturedNationalIdFrontImage = ref<string | null>(null);
+const capturedNationalIdBackImage = ref<string | null>(null);
+const capturedSelfieImage = ref<string | null>(null);
+const step = ref<number>(0);
+const cameraError = ref<string>('');
 
 // Camera functions
 const startCamera = async (isSelfie = false) => {
@@ -257,16 +257,16 @@ const startCamera = async (isSelfie = false) => {
     };
     const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
     const targetVideoRef = isSelfie ? selfieVideoRef : videoRef;
-    const setTargetStream = isSelfie ? (val) => { selfieStream.value = val; } : (val) => { stream.value = val; };
+    const setTargetStream = isSelfie ? (val: MediaStream) => { selfieStream.value = val; } : (val: MediaStream) => { stream.value = val; };
 
     if (targetVideoRef.value) {
       if (targetVideoRef.value.srcObject) {
-        targetVideoRef.value.srcObject.getTracks().forEach(track => track.stop());
+        (targetVideoRef.value.srcObject as MediaStream).getTracks().forEach(track => track.stop());
       }
       targetVideoRef.value.srcObject = mediaStream;
       try {
         await targetVideoRef.value.play();
-      } catch (playErr) {
+      } catch (playErr: any) {
         if (playErr.name !== "AbortError") {
           cameraError.value = t('cameraStartError');
         }
@@ -278,7 +278,7 @@ const startCamera = async (isSelfie = false) => {
   }
 };
 
-const stopCamera = (currentStream, videoElementRef) => {
+const stopCamera = (currentStream: typeof stream, videoElementRef: typeof videoRef) => {
   if (currentStream && currentStream.value) {
     currentStream.value.getTracks().forEach(track => track.stop());
   }
@@ -310,7 +310,7 @@ onUnmounted(() => {
 });
 
 // Document selection
-function handleDocumentSelect(type) {
+function handleDocumentSelect(type: string) {
   documentType.value = type;
   step.value = 1;
 }
@@ -323,6 +323,7 @@ function captureDocumentPhoto() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const context = canvas.getContext('2d');
+    if (!context) return;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = canvas.toDataURL('image/png');
 
@@ -349,6 +350,7 @@ function captureSelfiePhoto() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const context = canvas.getContext('2d');
+    if (!context) return;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     capturedSelfieImage.value = canvas.toDataURL('image/png');
     stopCamera(selfieStream, selfieVideoRef);
@@ -363,7 +365,6 @@ function goToNextDocumentStep() {
     step.value = 3;
   }
 }
-
 
 // Reset
 function resetApplication() {
@@ -408,7 +409,7 @@ function getCurrentDocumentImage() {
   if (documentType.value === DOCUMENT_TYPES.NATIONAL_ID) {
     return capturedNationalIdBackImage.value || capturedNationalIdFrontImage.value;
   }
-  return null;
+  return ;
 }
 
 // Utility translation functions
@@ -456,18 +457,32 @@ function getCapturedImageTitle() {
   return t('capturedDocument', { type: t(documentType.value) });
 }
 
-
 const finishProcess = () => {
   step.value = 4;
   showConfirmationModal.value = true;
 }
 
 // Main upload function for identification
-const uploadIdentification = async () => {
+const uploadIdentification = async (): Promise<void> => {
   try {
     isLoading.value = true;
+
+    type IdentificationUrls = {
+      capturedPassportImageUrl?: string;
+      capturedDrivingLicenseImageUrl?: string;
+      capturedNationalIdFrontImageUrl?: string;
+      capturedNationalIdBackImageUrl?: string;
+      capturedSelfieImageUrl?: string;
+    };
+
+    type Identification = {
+      documentType: string;
+      date: string;
+      identifyBy: string;
+    } & IdentificationUrls;
+
     // 1. Upload each image and get URLs
-    const urls = {};
+    const urls: IdentificationUrls = {};
 
     if (capturedPassportImage.value) {
       urls.capturedPassportImageUrl = await uploadBase64Image(
@@ -506,26 +521,20 @@ const uploadIdentification = async () => {
     }
 
     // 2. Prepare the identification object with URLs
-    const identification = {
+    const identification: Identification = {
       documentType: documentType.value,
       ...urls,
       date: new Date().toISOString(),
-      identifyBy: documentId ? documentId : 'unknown_user',
+      identifyBy:( documentId ? documentId : 'unknown_user') as string,
     };
-    await editDocumentGlobal(patronCollection, documentId, JSON.stringify({ identification: identification }));
+    await editDocumentGlobal(patronCollection, documentId as string, JSON.stringify({ identification }));
 
-  } catch (err) {
-    alert('Upload failed: ' + err.message);
+  } catch (err: any) {
+    alert('Upload failed: ' + (err?.message ?? err));
   } finally {
     isLoading.value = false;
   }
 };
-
-
-
-
-
-
 </script>
 
 <style>
