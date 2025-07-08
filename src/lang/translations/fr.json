@@ -160,6 +160,7 @@
   "French": "Français",
   "English": "Anglais",
   "catalogue": "Catalogue",
-   "Edit": "Modifier",
-  "Delete": "Supprimer"
+  "Edit": "Modifier",
+  "Delete": "Supprimer",
+  "save": "Enregistrer"
 }
