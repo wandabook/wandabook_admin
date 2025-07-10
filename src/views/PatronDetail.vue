@@ -83,7 +83,8 @@
                     <Spinner v-if="isDeleting" />
                     {{ $t('delete_patron') }}
                 </button>
-                <button @click="identification" class="px-4 py-2 bg-brand-default hover:bg-red-800 rounded-md text-white flex">
+                <button @click="identification"
+                    class="px-4 py-2 bg-brand-default hover:bg-red-800 rounded-md text-white flex">
                     <Spinner v-if="isDeleting" />
                     {{ $t('identification') }}
                 </button>
@@ -92,8 +93,13 @@
         <!-- patron documents -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-2xl font-semibold mb-4">{{ $t('Documents') }}</h2>
-            <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDocumentDefs" :rowData="patron.documents"
-                :pagination="true" :paginationPageSize="10" @cellClicked="onCellClicked"></ag-grid-vue>
+            <h2 class="text-xl font-semibold mb-4"> <span>{{ $t('documentType') }}:</span> {{
+                $t(identificationDocument.documentType) }} <br />
+                <span>{{ $t('date') }}:</span> {{
+                identificationDocument.date }}
+            </h2>
+            <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDocumentDefs"
+                :rowData="identificationDocument.urls" :pagination="true" :paginationPageSize="10"></ag-grid-vue>
         </div>
         <!-- Patron Activity Logs -->
         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -139,6 +145,7 @@ const popupTitle = ref("");
 const action = ref<string>('');
 const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);
+const identificationDocument = ref<any>({});
 // Sample activity logs
 const activityLogs = ref();
 const userStore = useUserStore();
@@ -151,26 +158,18 @@ const employ = computed(() => {
     return { ...JSON.parse(userStore.getUser) }
 });
 const colDocumentDefs = [
-    { field: "title", headerName: t("Title"), flex: 1 },
-    {
-        field: "type",
-        headerName: t("Type"),
-        flex: 1,
-        cellRenderer: (params: any) => {
-            return params.value ? `<span class="px-2 py-1">${params.value}</span>` : "";
+    { field: "name", headerName: t("Title"), flex: 1,
+cellRenderer: (params: any) => {
+            return params.value ? `<span class="px-2 py-1" target="_blank" rel="noopener noreferrer">${t(params.value)}</span>` : "";
         },
-    },
+
+     },
     {
-        field: "createdAt",
-        headerName: t("Created At"),
-        flex: 1,
-        valueFormatter: ({ value }: { value: string }) => {
-            if (!value) return "";
-            const date = new Date(value);
-            return new Intl.DateTimeFormat("fr-FR", {
-                dateStyle: "short",
-                timeStyle: "short",
-            }).format(date);
+        field: "link",
+        headerName: t("link"),
+        flex: 4,
+        cellRenderer: (params: any) => {
+            return params.value ? `<a href="${params.value}" class="px-2 py-1" target="_blank" rel="noopener noreferrer">${params.value}</a>` : "";
         },
     },
 ];
@@ -216,7 +215,7 @@ const onCellClicked = (e: any) => {
     window.location.href = '/documents/' + e.data.$id;
 };
 const identification = () => {
-    window.location.href = '/identification/'+patron.value.$id;
+    window.location.href = '/identification/' + patron.value.$id;
 }
 const toggleFreeze = () => {
     popupTitle.value = patron.value.freeze ? "Unfreeze Patron" : "Freeze Patron";
@@ -309,6 +308,13 @@ const cancelAction = () => {
 const getDocument = async () => {
     const document = await getSingleDocuments(documentId as string);
     patron.value = document;
+    identificationDocument.value = JSON.parse(document.identification || '{}');
+
+
+
+
+    console.log('patron', patron.value);
+    console.log('identificationDocument', identificationDocument.value);
 }
 const getActivitiesLog = async () => {
     const result = await getActivities(documentId as string);

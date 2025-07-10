@@ -168,7 +168,7 @@
           </button>
 
           <button @click="uploadIdentification"
-            class="w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray/25 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out">
+            class="w-full px-6 flex gap-2 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray/25 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out">
             <Spinner v-if="isLoading" class="mr-2" />
             {{ $t('save') }}
           </button>
@@ -198,7 +198,9 @@ const DOCUMENT_TYPES = {
 } as const;
 
 const { t } = useI18n();
-const documentId = router.currentRoute.value.params.documentId;
+const { documentId } = router.currentRoute.value.params as { documentId: string };
+console.log('Current route:', documentId);
+
 const patron = ref();
 
 const showConfirmationModal = ref(false);
@@ -467,68 +469,77 @@ const uploadIdentification = async (): Promise<void> => {
   try {
     isLoading.value = true;
 
-    type IdentificationUrls = {
-      capturedPassportImageUrl?: string;
-      capturedDrivingLicenseImageUrl?: string;
-      capturedNationalIdFrontImageUrl?: string;
-      capturedNationalIdBackImageUrl?: string;
-      capturedSelfieImageUrl?: string;
+    type IdentificationUrl = {
+      name: string;
+      link: string;
     };
 
     type Identification = {
       documentType: string;
       date: string;
       identifyBy: string;
-    } & IdentificationUrls;
+      urls: IdentificationUrl[];
+    };
 
-    // 1. Upload each image and get URLs
-    const urls: IdentificationUrls = {};
+    // 1. Upload each image and get URLs as an array
+    const urls: IdentificationUrl[] = [];
 
     if (capturedPassportImage.value) {
-      urls.capturedPassportImageUrl = await uploadBase64Image(
+      const link = await uploadBase64Image(
         capturedPassportImage.value,
         `passport_${Date.now()}.png`,
         'identification/passport'
       );
+      urls.push({ name: 'capturedPassportImage', link });
     }
     if (capturedDrivingLicenseImage.value) {
-      urls.capturedDrivingLicenseImageUrl = await uploadBase64Image(
+      const link = await uploadBase64Image(
         capturedDrivingLicenseImage.value,
         `driving_license_${Date.now()}.png`,
         'identification/driving_license'
       );
+      urls.push({ name: 'capturedDrivingLicenseImage', link });
     }
     if (capturedNationalIdFrontImage.value) {
-      urls.capturedNationalIdFrontImageUrl = await uploadBase64Image(
+      const link = await uploadBase64Image(
         capturedNationalIdFrontImage.value,
         `national_id_front_${Date.now()}.png`,
         'identification/national_id'
       );
+      urls.push({ name: 'capturedNationalIdFrontImage', link });
     }
     if (capturedNationalIdBackImage.value) {
-      urls.capturedNationalIdBackImageUrl = await uploadBase64Image(
+      const link = await uploadBase64Image(
         capturedNationalIdBackImage.value,
         `national_id_back_${Date.now()}.png`,
         'identification/national_id'
       );
+      urls.push({ name: 'capturedNationalIdBackImage', link });
     }
     if (capturedSelfieImage.value) {
-      urls.capturedSelfieImageUrl = await uploadBase64Image(
+      const link = await uploadBase64Image(
         capturedSelfieImage.value,
         `selfie_${Date.now()}.png`,
         'identification/selfie'
       );
+      urls.push({ name: 'capturedSelfieImage', link });
     }
 
-    // 2. Prepare the identification object with URLs
+    // 2. Prepare the identification object with the urls array
     const identification: Identification = {
       documentType: documentType.value,
-      ...urls,
+      urls,
       date: new Date().toISOString(),
-      identifyBy:( documentId ? documentId : 'unknown_user') as string,
+      identifyBy: documentId ? documentId : 'unknown_user',
     };
-    await editDocumentGlobal(patronCollection, documentId as string, JSON.stringify({ identification }));
 
+    console.log('Identification object to upload:', identification);
+    await editDocumentGlobal(
+      patronCollection,
+      documentId as string,
+      JSON.stringify({ identification: JSON.stringify(identification) })
+    );
+    window.location.href = '/patrons/' + (documentId as string);
   } catch (err: any) {
     alert('Upload failed: ' + (err?.message ?? err));
   } finally {

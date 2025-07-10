@@ -54,18 +54,25 @@ export function base64ToFile(base64: string, filename: string): File {
 }
 // Helper: Upload a base64 image and get the URL
 export async function uploadBase64Image(base64: string, filename: string, path: string) {
-    
+    // Cloudinary config
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
+
+    // Remove data URL prefix if present
+    const base64Data = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
+
     const formData = new FormData();
-    formData.append('file', base64ToFile(base64, filename));
-    //formData.append('filename', filename);
-    formData.append('path', path);
-    const id = uuidv4();
-    const response = await fetch(`${import.meta.env.VITE_APP_STORAGE_URL}/upload/${id}`, {
+    formData.append('file', base64Data);
+    formData.append('upload_preset', uploadPreset);
+    formData.append('public_id', `${path}/${filename}`);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
         method: 'POST',
         body: formData,
     });
-    console.log('response', response)
-    if (!response.ok) throw new Error('Upload failed');
+
+    if (!response.ok) throw new Error('Cloudinary upload failed');
     const data = await response.json();
-    return data.url; // The backend should return { url: "https://..." }
+    // Cloudinary returns the URL in 'secure_url'
+    return data.secure_url as string;
 }

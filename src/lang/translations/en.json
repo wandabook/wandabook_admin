@@ -210,6 +210,23 @@
   "capturedSelfieAlt": "Captured selfie",
   "cniRectoAlt": "Captured CNI Front",
   "cniVersoAlt": "Captured CNI Back",
-  "save":"Save"
-  
+  "save": "Save",
+  "documentType": "Document Type",
+  "date": "Date",
+  "capturedPassportImage": "Captured Passport Image",
+  "capturedDrivingLicenseImage": "Captured Driving License Image",
+  "capturedNationalIdFrontImage": "Captured National ID Front Image",
+  "capturedNationalIdBackImage": "Captured National ID Back Image",
+  "capturedSelfieImage": "Captured Selfie Image",
+  "national_id": "National ID",
+  "driving_license": "Driving License",
+  "captureContractTitle": "Capture Contract Image",
+  "stopCamera": "Stop Camera",
+  "capturedContractAlt": "Captured contract",
+  "upload": "Upload",
+  "uploading": "Uploading...",
+  "uploaded": "Uploaded!",
+  "viewImage": "View Image",
+  "uploadFailed": "Upload failed",
+  "identification":"Identification"
 }
