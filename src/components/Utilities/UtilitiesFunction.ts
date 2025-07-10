@@ -58,6 +58,7 @@ export async function uploadBase64Image(base64: string, filename: string, path: 
     // Cloudinary config
     const cloudName = import.meta.env.VITE_APP_CLOUDINARY_CLOUD_NAME as string;
     const uploadPreset = import.meta.env.VITE_APP_CLOUDINARY_UPLOAD_PRESET as string;
+    console.log(cloudName, uploadPreset);
 
     // Remove data URL prefix if present
     const base64Data = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
