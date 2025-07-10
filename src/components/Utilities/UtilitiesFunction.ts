@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 export async function handleResponse<T>(response: Response): Promise<{ jsonResponse: T; httpStatusCode: number }> {
@@ -76,3 +77,51 @@ export async function uploadBase64Image(base64: string, filename: string, path: 
     // Cloudinary returns the URL in 'secure_url'
     return data.secure_url as string;
 }
+export function generateTemporaryPassword(length: number = 8): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    password += chars[randomIndex];
+  }
+  return password;
+}
+export async function sendEmail({ to, subject, text }: { to: string; subject: string; text: string }) {
+    try {
+        const response = await axios.post(import.meta.env.VITE_APP_SEND_EMAIL_ROUTE, {
+            to,
+            subject,
+            text
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.error || 'Failed to send email');
+        }
+        throw error;
+    }
+}
+
+export const generateWelcomeMessage = (
+  firstName: string,
+  cardCode: string,
+  temporaryPassword: string,
+  loginLink: string
+): string => {
+  return `Bonjour ${firstName},
+
+Merci pour votre abonnement !
+
+Voici vos identifiants pour accéder à votre compte :
+- Code de carte : ${cardCode}
+- Mot de passe temporaire : ${temporaryPassword}
+
+Vous pouvez vous connecter à votre espace ici : ${loginLink}
+
+Cordialement,  
+L'équipe`;
+};

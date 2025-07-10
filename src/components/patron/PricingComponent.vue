@@ -239,7 +239,7 @@ import { Query } from 'appwrite';
 import { useUserStore } from '@/stores/user';
 import PhoneInput from '../Forms/PhoneInput.vue';
 import WInputCNI from '../Forms/WInputCNI.vue';
-import { generateCashPaymentLog } from '../Utilities/UtilitiesFunction';
+import { generateCashPaymentLog, generateTemporaryPassword, generateWelcomeMessage, sendEmail } from '../Utilities/UtilitiesFunction';
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -261,24 +261,24 @@ const employ = computed(() => {
 });
 const createUserAccount = async () => {
     errorMessage.value = "";
-    if (confirm_pass.value === user.value.password) {
-        isLoading.value = true;
-        user.value.notification_email = user.value.email;
-        user.value.patron_id = selectedSubscription.value.title;
-        user.value.tags = selectedSubscription.value.title + ',' + (isAnnual ? 'One year' : "One Month");
-        const result = await addNewUser(JSON.stringify(user.value));
-        if (result.status === 'failed') {
+    isLoading.value = true;
+    user.value.notifications_email = user.value.email;
+    user.value.patron_id = selectedSubscription.value.title;
+    user.value.tags = selectedSubscription.value.title + ',' + (isAnnual ? 'One year' : "One Month");
+    const result = await addNewUser(JSON.stringify(user.value));
+    console.log("result", result);
+    if (result.status === 'failed') {
+        errorMessage.value = 'an error occur. please try again or contact the support'
+    } else if (result.status === 'completed') {
+        const response = JSON.parse(result.responseBody);
+        if (response.result && response.result.error) {
             errorMessage.value = 'an error occur. please try again or contact the support'
-        } else if (result.status === 'completed') {
-            const response = JSON.parse(result.responseBody);
-            if (response.result && response.result.error) {
-                errorMessage.value = 'an error occur. please try again or contact the support'
-            } else {
-                await createWandaUser(response.result.barcode);
-            }
+        } else {
+            await createWandaUser(response.result.barcode);
         }
-        isLoading.value = false;
     }
+    isLoading.value = false;
+
 }
 const onSelectSubscription = (tier: any) => {
     isCreation.value = true;
@@ -290,8 +290,8 @@ const user = ref({
     first_name: '',
     last_name: '',
     email: '',
-    notification_email: '',
-    password: '',
+    notifications_email: '',
+    password: generateTemporaryPassword(),
     phone: "",
     address1: "",
     city: '',
@@ -326,6 +326,8 @@ const createWandaUser = async (barcode: any) => {
         lastSubcriptionDate: new Date(now),
         endSubscriptionDate: isAnnual.value ? oneYearLater : oneMonthLater,
         readCondition: true,
+        patron_id: selectedSubscription.value.title,
+        tags: selectedSubscription.value.title + ',' + (isAnnual ? 'One year' : "One Month"),
         isAnnual: isAnnual.value,
         created_by: employ.value.$id,
         created_by_name: `${employ.value.name ?? ''} ${employ.value.phone ?? ''} ${employ.value.email ?? ''}`
@@ -340,6 +342,20 @@ const createWandaUser = async (barcode: any) => {
             log: generateCashPaymentLog(`${userRecord.first_name ?? ''} ${userRecord.last_name ?? ''}`, amount, employ.value.name ?? employ.value.email, false)
         }
         const activityLog = await createActivitiesLogs(activityLogObjsc);
+        try {
+            await sendEmail({
+                to: user.value.email,
+                subject: 'Confirmation de votre abonnement',
+                text: generateWelcomeMessage(
+                    user.value.first_name,
+                    barcode,
+                    user.value.password,
+                    import.meta.env.VITE_APP_LOGIN_LINK
+                )
+            });
+        } catch (error) {
+            console.error("Error sending email:", error);
+        }
         isCreation.value = false;
         isSuccess.value = true;
         redirectToLogin(userResult.$id);
