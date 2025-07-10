@@ -262,7 +262,7 @@ const employ = computed(() => {
 const createUserAccount = async () => {
     errorMessage.value = "";
     isLoading.value = true;
-    user.value.notifications_email = user.value.email;
+    user.value.notification_email = user.value.email;
     user.value.patron_id = selectedSubscription.value.title;
     user.value.tags = selectedSubscription.value.title + ',' + (isAnnual ? 'One year' : "One Month");
     const result = await addNewUser(JSON.stringify(user.value));
@@ -290,7 +290,7 @@ const user = ref({
     first_name: '',
     last_name: '',
     email: '',
-    notifications_email: '',
+    notification_email: '',
     password: generateTemporaryPassword(),
     phone: "",
     address1: "",
