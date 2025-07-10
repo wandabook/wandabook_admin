@@ -59,7 +59,7 @@
         <!-- Actions Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-2xl font-semibold mb-4">Actions</h2>
-            <div class="flex space-x-4">
+            <div class="flex flex-wrap gap-2">
                 <button @click="toggleFreeze"
                     :class="patron.freeze ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-red hover:bg-red-600 text-white'"
                     class="px-4 py-2 rounded-md flex gap-3">
@@ -88,15 +88,21 @@
                     <Spinner v-if="isDeleting" />
                     {{ $t('identification') }}
                 </button>
+                <button @click="showContractModal = true"
+                    class="px-4 py-2 bg-brand-default hover:bg-red-800 rounded-md text-white flex">
+                    <Spinner v-if="isDeleting" />
+                    {{ $t('captureContractTitle') }}
+                </button>
             </div>
         </div>
         <!-- patron documents -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6"
+            v-if="identificationDocument && identificationDocument.urls">
             <h2 class="text-2xl font-semibold mb-4">{{ $t('Documents') }}</h2>
-            <h2 class="text-xl font-semibold mb-4"> <span>{{ $t('documentType') }}:</span> {{
-                $t(identificationDocument.documentType) }} <br />
+            <h2 class="text-xl font-semibold mb-4" v-if="identificationDocument.documentType"> <span>{{ $t('documentType') }}:</span> {{
+                $t(identificationDocument.documentType ?? '') }} <br />
                 <span>{{ $t('date') }}:</span> {{
-                identificationDocument.date }}
+                    identificationDocument.date }}
             </h2>
             <ag-grid-vue class="ag-theme-quartz w-full h-96" :columnDefs="colDocumentDefs"
                 :rowData="identificationDocument.urls" :pagination="true" :paginationPageSize="10"></ag-grid-vue>
@@ -117,6 +123,7 @@
     </confirmation-popup>
     <UpdatSubscription :patron="patron" @cancel="closeModal" @refresh="refreshPage" v-if="isChanging">
     </UpdatSubscription>
+    <ContractCapture v-model="showContractModal" @uploaded="handleContractUploaded" />
 </template>
 
 <script lang="ts" setup>
@@ -126,7 +133,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
 import { AgGridVue } from "ag-grid-vue3";
 import router from "../router";
-import { createActivitiesLogs, deleteUser, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
+import { createActivitiesLogs, deleteUser, editDocumentGlobal, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
 import Spinner from "../components/Utilities/Spinner.vue";
 import showAlert from "../helpers/alert";
 import { useI18n } from "vue-i18n";
@@ -134,6 +141,8 @@ import { generateCashPaymentLog } from "../components/Utilities/UtilitiesFunctio
 import { useUserStore } from "../stores/user";
 const { t } = useI18n({ useScope: "global" });
 import UpdatSubscription from "../components/patron/UpdatSubscription.vue";
+import ContractCapture from "./ContractCapture.vue";
+import { patronCollection } from "../components/Utilities/constants";
 const { documentId } = router.currentRoute.value.params;
 const patron = ref();
 const showPopup = ref(false);
@@ -146,6 +155,7 @@ const action = ref<string>('');
 const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);
 const identificationDocument = ref<any>({});
+const showContractModal = ref(false);
 // Sample activity logs
 const activityLogs = ref();
 const userStore = useUserStore();
@@ -158,12 +168,13 @@ const employ = computed(() => {
     return { ...JSON.parse(userStore.getUser) }
 });
 const colDocumentDefs = [
-    { field: "name", headerName: t("Title"), flex: 1,
-cellRenderer: (params: any) => {
+    {
+        field: "name", headerName: t("Title"), flex: 1,
+        cellRenderer: (params: any) => {
             return params.value ? `<span class="px-2 py-1" target="_blank" rel="noopener noreferrer">${t(params.value)}</span>` : "";
         },
 
-     },
+    },
     {
         field: "link",
         headerName: t("link"),
@@ -310,6 +321,11 @@ const getDocument = async () => {
     patron.value = document;
     identificationDocument.value = JSON.parse(document.identification || '{}');
 
+    if (patron.value.contractLink) {
+        identificationDocument.value.urls = identificationDocument.value.urls ?? []
+        identificationDocument.value.urls.push({ name: 'capturedContractImage', link: patron.value.contractLink });
+    }
+
 
 
 
@@ -338,7 +354,19 @@ const refreshPage = () => {
     showAlert('success', t('renew_succes'));
     refresh();
 }
-refresh()
+refresh();
+const handleContractUploaded = async (url: string) => {
+    const value = {
+        contractLink: url
+    }
+    await editDocumentGlobal(
+        patronCollection,
+        documentId as string,
+        JSON.stringify(value)
+    );
+    showContractModal.value = false;
+    refresh();
+};
 </script>
 
 <style scoped>
