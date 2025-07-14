@@ -46,7 +46,11 @@ export const login = (email: string, password: string) => {
 }
 
 export const logout = async () => {
-    await account.deleteSession('current');
+    try{
+        await account.deleteSession('current');
+    }catch(error){
+    
+    }
 }
 export const users = async () => {
     const result = await functions.createExecution(
