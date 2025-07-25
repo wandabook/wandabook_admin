@@ -118,7 +118,7 @@ export const generateWelcomeMessage = (
 Merci pour votre abonnement !
 
 Voici vos identifiants pour accéder à votre compte :
-- Code de carte : ${cardCode}
+- Code-barres : ${cardCode}
 - Mot de passe temporaire : ${temporaryPassword}
 
 Vous pouvez vous connecter à votre espace ici : ${loginLink}

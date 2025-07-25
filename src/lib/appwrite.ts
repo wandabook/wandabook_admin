@@ -205,3 +205,16 @@ export const getDocumentsWithFilerGlobal = async (collectionId: string, filters:
     );
 }
 
+
+export const checkPayment =  async (body: string) => {
+    const result = await functions.createExecution(
+        import.meta.env.VITE_APP_USER_FUNCTION_ID, // functionId
+        body, // body (optional)
+        false, // async (optional)
+        'paymentnotification', // path (optional)
+        ExecutionMethod.POST, // method (optional)
+        {}, // headers (optional)
+    );
+    return result;
+}
+

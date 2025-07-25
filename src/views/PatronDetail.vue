@@ -60,6 +60,10 @@
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-2xl font-semibold mb-4">Actions</h2>
             <div class="flex flex-wrap gap-2">
+                <button @click="checkPaymentLocal" v-if="patron.cpm_trans_id"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
+                        <Spinner v-if="isCheckingPayment"></Spinner> {{ $t('check_payment') }}
+                    </button>
                 <button @click="toggleFreeze"
                     :class="patron.freeze ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-red hover:bg-red-600 text-white'"
                     class="px-4 py-2 rounded-md flex gap-3">
@@ -99,8 +103,9 @@
         <div class="bg-white p-6 rounded-lg shadow-md mb-6"
             v-if="identificationDocument && identificationDocument.urls">
             <h2 class="text-2xl font-semibold mb-4">{{ $t('Documents') }}</h2>
-            <h2 class="text-xl font-semibold mb-4" v-if="identificationDocument.documentType"> <span>{{ $t('documentType') }}:</span> {{
-                $t(identificationDocument.documentType ?? '') }} <br />
+            <h2 class="text-xl font-semibold mb-4" v-if="identificationDocument.documentType"> <span>{{
+                $t('documentType') }}:</span> {{
+                        $t(identificationDocument.documentType ?? '') }} <br />
                 <span>{{ $t('date') }}:</span> {{
                     identificationDocument.date }}
             </h2>
@@ -133,7 +138,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
 import { AgGridVue } from "ag-grid-vue3";
 import router from "../router";
-import { createActivitiesLogs, deleteUser, editDocumentGlobal, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
+import { checkPayment, createActivitiesLogs, deleteUser, editDocumentGlobal, getActivities, getSingleDocuments, updateUser } from "../lib/appwrite";
 import Spinner from "../components/Utilities/Spinner.vue";
 import showAlert from "../helpers/alert";
 import { useI18n } from "vue-i18n";
@@ -156,6 +161,7 @@ const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);
 const identificationDocument = ref<any>({});
 const showContractModal = ref(false);
+const isCheckingPayment = ref(false);
 // Sample activity logs
 const activityLogs = ref();
 const userStore = useUserStore();
@@ -355,6 +361,33 @@ const refreshPage = () => {
     refresh();
 }
 refresh();
+const checkPaymentLocal = async () => {
+    isCheckingPayment.value = true;
+    const payload = {
+        cpm_trans_id: patron.value.cpm_trans_id,
+        cpm_site_id: import.meta.env.VITE_CPM_SITE_ID,
+    };
+    try {
+        const result = await checkPayment(JSON.stringify(payload));
+        console.log('response', result)
+        if (result.status == 'completed') {
+            if (result.responseBody) {
+                const responseBody = JSON.parse(result.responseBody);
+                if (!responseBody.status) {
+                    showAlert('error', t(responseBody.message))
+                    return
+                }
+            }
+            window.location.reload()
+        }
+    } catch (error) {
+        console.log(error);
+        showAlert('error', t('error_occur'));
+    } finally {
+        isCheckingPayment.value = false;
+    }
+
+}
 const handleContractUploaded = async (url: string) => {
     const value = {
         contractLink: url

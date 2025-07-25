@@ -229,5 +229,7 @@
   "viewImage": "Voir l'image",
   "uploadFailed": "Échec du téléversement",
   "identification": "Identification",
-  "capturedContractImage": "Image du Contract"
+  "capturedContractImage": "Image du Contract",
+  "check_payment": "Vérifier le paiement",
+  "Payment failled": "Paiement échoué"
 }

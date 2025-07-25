@@ -229,5 +229,7 @@
   "uploaded": "Uploaded!",
   "viewImage": "View Image",
   "uploadFailed": "Upload failed",
-  "identification":"Identification"
+  "identification":"Identification",
+  "check_payment": "Check Payment",
+  "Payment failled":"Payment failled"
 }
