@@ -47,9 +47,9 @@
             <h2 class="text-2xl font-semibold mb-4">Actions</h2>
             <div class="flex space-x-4">
 
-                <button @click="editUser" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
+             <!--   <button @click="editUser" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
                     {{ $t('update_user') }}
-                </button>
+                </button>-->
                 <button @click="changePassword" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-white">{{ $t('change_password') }}</button>
                 <button @click="deletePatron" class="px-4 py-2 bg-red hover:bg-red-800 rounded-md text-white flex">
                     <Spinner v-if="isDeleting" />
