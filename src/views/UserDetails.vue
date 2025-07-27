@@ -12,7 +12,7 @@
 
         <!-- Patron Details Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Patron Details</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ $t('member_details') }}</h2>
             <div class="grid grid-cols-2 gap-6">
                 <div><strong>{{ $t('name') }}:</strong> {{ patron.name }}</div>
                 <div><strong>{{ $t('email') }}:</strong> {{ patron.email }}</div>
@@ -50,7 +50,7 @@
                 <button @click="editUser" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
                     {{ $t('update_user') }}
                 </button>
-
+                <button @click="changePassword" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-white">{{ $t('change_password') }}</button>
                 <button @click="deletePatron" class="px-4 py-2 bg-red hover:bg-red-800 rounded-md text-white flex">
                     <Spinner v-if="isDeleting" />
                     {{ $t('delete_user') }}
@@ -60,6 +60,8 @@
     </div>
     <confirmation-popup v-if="showPopup" :title="popupTitle" :message="popupMessage" :onConfirm="confirmAction"
         :onCancel="cancelAction" />
+    <ChangePasswordModal v-if="showChangePasswordModal" @close="cancelPasswordChange" :patron="patron" />
+
 </template>
 
 <script lang="ts" setup>
@@ -68,12 +70,14 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import ConfirmationPopup from "@/components/Alerts/ConfirmPopup.vue"
 import router from "../router";
-import { deleteUser, getActivities, getSingleDocuments, getUserId, updateUser } from "../lib/appwrite";
+import { ChangeUserPassword, deleteUser, getActivities, getSingleDocuments, getUserId, updateUser } from "../lib/appwrite";
 import Spinner from "../components/Utilities/Spinner.vue";
 import { useUserStore } from '@/stores/user';
 import { useI18n } from "vue-i18n";
 const { t } = useI18n({ useScope: "global" });
 const { documentId } = router.currentRoute.value.params;
+import ChangePasswordModal from "@/components/Modals/ChangePasswordModal.vue";
+import Swal from 'sweetalert2';
 
 const patron = ref();
 const showPopup = ref(false);
@@ -84,6 +88,7 @@ const popupMessage = ref("");
 const actionToConfirm = ref<null | (() => void)>(null);
 // Sample activity logs
 const activityLogs = ref();
+const showChangePasswordModal = ref(false);
 
 
 // Methods
@@ -117,6 +122,15 @@ const confirmAction = () => {
 const cancelAction = () => {
     showPopup.value = false;
 };
+const changePassword = () => {
+    showChangePasswordModal.value = true;
+}
+
+const cancelPasswordChange = () => {
+    showChangePasswordModal.value = false;
+};
+
+
 
 const getDocument = async () => {
     const us = { id: documentId }

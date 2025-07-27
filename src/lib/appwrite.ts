@@ -218,3 +218,14 @@ export const checkPayment =  async (body: string) => {
     return result;
 }
 
+export const ChangeUserPassword =  async (body: string) => {
+    const result = await functions.createExecution(
+        import.meta.env.VITE_APP_USER_FUNCTION_ID, // functionId
+        body, // body (optional)
+        false, // async (optional)
+        'changePassword', // path (optional)
+        ExecutionMethod.POST, // method (optional)
+        {}, // headers (optional)
+    );
+    return result;
+}

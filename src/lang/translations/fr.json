@@ -231,5 +231,11 @@
   "identification": "Identification",
   "capturedContractImage": "Image du Contract",
   "check_payment": "Vérifier le paiement",
-  "Payment failled": "Paiement échoué"
+  "Payment failled": "Paiement échoué",
+  "passwords_do_not_match": "Les mots de passe ne correspondent pas.",
+  "password_too_short": "Le mot de passe doit contenir au moins 8 caractères.",
+  "password_changed_successfully": "Mot de passe modifié avec succès !",
+  "password_change_failed": "Échec de la modification du mot de passe",
+  "change_password": "Changer le mot de passe",
+  "member_details": "Détails du membre"
 }

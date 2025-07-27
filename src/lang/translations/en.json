@@ -231,5 +231,12 @@
   "uploadFailed": "Upload failed",
   "identification":"Identification",
   "check_payment": "Check Payment",
-  "Payment failled":"Payment failled"
+  "Payment failled":"Payment failled",
+  "passwords_do_not_match": "Passwords do not match.",
+  "password_too_short": "Password must be at least 8 characters long.",
+  "password_changed_successfully": "Password changed successfully!",
+  "password_change_failed": "Failed to change password.",
+  "change_password":"Change password",
+  "member_details":"Member Details"
+  
 }
